@@ -1,21 +1,22 @@
 import 'package:flutter/foundation.dart' show immutable;
+import 'package:hot_news/features/news/domain/entities/sources.dart';
 
 @immutable
 class News {
-  final String? id;
-  final String? name;
+  final String? newsId;
+  final Source? source;
   final String? author;
-  final String? tittle;
+  final String? title;
   final String? description;
   final String? url;
   final String? urlToImage;
-  final String? publishedAt;
+  final DateTime? publishedAt;
   final String? content;
   const News({
-    required this.id,
-    required this.name,
+    required this.newsId,
+    required this.source,
     required this.author,
-    required this.tittle,
+    required this.title,
     required this.description,
     required this.url,
     required this.urlToImage,
@@ -25,10 +26,10 @@ class News {
 
   @override
   bool operator ==(covariant News other) =>
-      id == other.id &&
-      name == other.name &&
+      newsId == other.newsId &&
+      source == other.source &&
       author == other.author &&
-      tittle == other.tittle &&
+      title == other.title &&
       description == other.description &&
       url == other.url &&
       urlToImage == other.urlToImage &&
@@ -38,10 +39,9 @@ class News {
   @override
   int get hashCode => Object.hashAll(
         [
-          int,
-          num,
+          newsId,
           author,
-          tittle,
+          title,
           description,
           url,
           urlToImage,
