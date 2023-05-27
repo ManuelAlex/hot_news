@@ -8,13 +8,13 @@ import 'package:hot_news/features/news/domain/entities/sources.dart';
 class NewsModel extends News {
   const NewsModel({
     required String? newsId,
-    required Source source,
+    required Source? source,
     required String? author,
     required String? title,
     required String? description,
     required String? url,
     required String? urlToImage,
-    required DateTime? publishedAt,
+    required String? publishedAt,
     required String? content,
   }) : super(
           newsId: newsId,
@@ -24,7 +24,7 @@ class NewsModel extends News {
           description: description,
           url: url,
           urlToImage: urlToImage,
-          publishedAt: publishedAt,
+          publishedAt: publishedAt ?? '',
           content: content,
         );
 
@@ -32,12 +32,12 @@ class NewsModel extends News {
       : this(
           source: SourceModel.fromJson(json[JsonStrings.source]),
           newsId: SourceModel.fromJson(json[JsonStrings.source]).id,
-          author: json[JsonStrings.author],
-          title: json[JsonStrings.title],
-          description: json[JsonStrings.description],
-          url: json[JsonStrings.url],
-          urlToImage: json[JsonStrings.urlToImage],
-          publishedAt: json[JsonStrings.publishedAt],
-          content: json[JsonStrings.content],
+          author: json[JsonStrings.author] ?? '',
+          title: json[JsonStrings.title] ?? '',
+          description: json[JsonStrings.description] ?? '',
+          url: json[JsonStrings.url] ?? '',
+          urlToImage: json[JsonStrings.urlToImage] ?? '',
+          publishedAt: json[JsonStrings.publishedAt] ?? '',
+          content: json[JsonStrings.content] ?? '',
         );
 }

@@ -5,14 +5,14 @@ import 'package:hot_news/features/news/domain/entities/sources.dart';
 @immutable
 class SourceModel extends Source {
   const SourceModel({
-    required String id,
-    required String name,
-  }) : super(id: id, name: name);
+    String? id,
+    String? name,
+  }) : super();
 
   SourceModel.fromJson(
     Map<String, dynamic> json,
   ) : this(
-          id: json[JsonStrings.id],
-          name: json[JsonStrings.name],
+          id: json[JsonStrings.id] ?? 'no Id',
+          name: json[JsonStrings.name] ?? 'no Name',
         );
 }

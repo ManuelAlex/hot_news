@@ -40,6 +40,7 @@ dependencies:
   flutter_riverpod: ^2.3.6
   data_connection_checker_nulls: ^0.0.2
   shared_preferences: ^2.1.1
+  collection: ^1.17.0
 
 dev_dependencies:
   flutter_test:

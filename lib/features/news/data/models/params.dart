@@ -8,12 +8,13 @@ class Params {
   final String? searchPhrase;
   final int? pageSize;
 
-  const Params(
-    this.searchPhrase,
+  const Params({
+    this.country = 'us',
+    this.category = Category.general,
+    this.pageSize = 20,
     this.sources,
-  )   : country = 'us',
-        category = Category.general,
-        pageSize = 20;
+    this.searchPhrase,
+  });
 }
 
 enum NewSources {

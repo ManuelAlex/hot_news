@@ -1,4 +1,4 @@
-import 'package:hot_news/features/news/domain/use_cases/params.dart';
+import 'package:hot_news/features/news/data/models/params.dart';
 
 extension StringFromCategory on Object {
   String? getCategory(Category category) {
