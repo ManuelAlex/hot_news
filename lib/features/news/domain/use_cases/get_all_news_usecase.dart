@@ -12,8 +12,7 @@ class GetAllNewsUseCase implements NewsUseCase<NewsResult, Params> {
   Future<NewsResult> request({required Params params}) async {
     try {
       final result = await repository.getAllNews(params: params);
-      print('------------------usecase----------');
-      print(' result in usecasegetAllNews is ${result.news!.elementAt(0)}');
+
       return NewsResult(result: Result.success, news: result.news);
     } catch (_) {
       return const NewsResult(result: Result.failure, news: null);

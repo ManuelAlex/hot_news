@@ -20,7 +20,9 @@ class NewsNotifer extends StateNotifier<NewsState> {
     // required this.netWorkInfo,
   }) : super(
           const NewsState.initial(),
-        );
+        ) {
+    getAllNews();
+  }
 
   Future<void> getAllNews() => _getNews(
         newsUseCase: getAllNewsUseCase,
@@ -41,13 +43,12 @@ class NewsNotifer extends StateNotifier<NewsState> {
     required Params params,
     required NewsUseCase newsUseCase,
   }) async {
-    print('----------------calling notifer func-------');
     state = state.copyWithIsLoading(true);
     // final isConnected = await netWorkInfo.isConnected;
     // if (isConnected) {
     try {
       final result = await newsUseCase.request(params: params);
-      print(' result in notifier is ${result.news}');
+
       if (result.result == Result.failure) {
         state = const NewsState(
           news: null,

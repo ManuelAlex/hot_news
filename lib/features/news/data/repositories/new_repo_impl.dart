@@ -34,8 +34,7 @@ class NewRepositaryImpl extends NewsRepository {
     if (isConnected) {
       try {
         final result = await getNews;
-        print('-----------------------------------------');
-        print(' result in NewRepositaryImpl is ${result.elementAt(0)}');
+
         return NewsResult(result: Result.success, news: result);
       } catch (_) {
         return const NewsResult(result: Result.failure, news: null);

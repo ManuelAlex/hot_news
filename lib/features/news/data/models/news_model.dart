@@ -3,6 +3,7 @@ import 'package:hot_news/features/news/data/models/constants/json_string.dart';
 import 'package:hot_news/features/news/data/models/source_model.dart';
 import 'package:hot_news/features/news/domain/entities/news_entity.dart';
 import 'package:hot_news/features/news/domain/entities/sources.dart';
+import 'package:hot_news/features/news/presentation/constants/string_const.dart';
 
 @immutable
 class NewsModel extends News {
@@ -36,7 +37,8 @@ class NewsModel extends News {
           title: json[JsonStrings.title] ?? '',
           description: json[JsonStrings.description] ?? '',
           url: json[JsonStrings.url] ?? '',
-          urlToImage: json[JsonStrings.urlToImage] ?? '',
+          urlToImage:
+              json[JsonStrings.urlToImage] ?? NewsStringConst.defaultImageUrl,
           publishedAt: json[JsonStrings.publishedAt] ?? '',
           content: json[JsonStrings.content] ?? '',
         );

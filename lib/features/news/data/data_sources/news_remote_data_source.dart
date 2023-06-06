@@ -11,6 +11,7 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart' show immutable;
+import 'package:hot_news/app_cores/extensions/strings_from_category.dart';
 import 'package:hot_news/features/news/data/api_constants.dart';
 import 'package:hot_news/features/news/data/models/news_model.dart';
 import 'package:hot_news/features/news/data/models/params.dart';
@@ -56,7 +57,8 @@ class NewsRemoteDataSourceImpl implements NewsRemoteDataSource {
   Future<Iterable<NewsModel>> _getNews({
     required Params params,
   }) async {
-    const String generalKeyword = Constants.generalKeyword;
+    String generalKeyword =
+        getCategory(params.category) ?? Constants.generalKeyword;
     Map<String, String> requestHeaders = {
       'Content-type': 'application/json',
     };
