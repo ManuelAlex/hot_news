@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:hot_news/features/news/presentation/views/main_view.dart';
 import 'package:hot_news/features/news/presentation/views/splash_screen.dart';
-import 'package:hot_news/main.dart';
 
 class Routes {
   static const String splashScreen = '/';
   static const String home = '/home';
   static const String headLine = '/headLine';
   static const String settings = '/settings';
+  static const String detailsScreen = '/news-details';
 }
 
 class RouteGenerator {

@@ -11,12 +11,15 @@ import 'package:hot_news/features/news/presentation/resources/color_manager.dart
 import 'package:hot_news/features/news/presentation/resources/value_manager.dart';
 import 'package:hot_news/features/news/presentation/state_mgt/provider/get_cat_news_details_provider.dart';
 import 'package:hot_news/features/news/presentation/extension/date_deducer_ext.dart';
+import 'package:hot_news/features/news/presentation/state_mgt/provider/local_news_notifier_provider.dart';
 import 'package:hot_news/features/news/presentation/views/hot_card_skeleton_loader.dart';
+import 'package:hot_news/features/news/presentation/views/news_details_view.dart';
 import 'package:hot_news/features/news/presentation/widgets/custom_button.dart';
 import 'package:hot_news/features/news/presentation/widgets/double_row_string.dart';
 
 class HotCards extends ConsumerWidget {
   final cat.Category category;
+
   const HotCards({
     super.key,
     required this.category,
@@ -29,82 +32,108 @@ class HotCards extends ConsumerWidget {
   ) {
     final size = MediaQuery.of(context).size;
     final newsByCatProvider = ref.watch(getNewsByCategoryProvider(category));
+    final localLoadingProvider = Provider((ref) {
+      final state = ref.watch(localNewStateProvider);
+      return state.isLoading;
+    });
+    final localStateIsloading = ref.watch(localLoadingProvider);
     return newsByCatProvider.when(
       data: (newsIterable) {
         final news = newsIterable.news;
         if (news == null) {
           return const NotFoundAnimationView();
         }
-        return Column(
-          children: [
-            _buildImageView(
-              news,
-              size.height * 0.25,
-              double.infinity,
+        return GestureDetector(
+          onTap: () {
+            Navigator.push(
               context,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(
-                top: AppPadding.p10,
-                left: AppPadding.p10,
-                right: AppPadding.p10,
+              MaterialPageRoute(
+                builder: (context) => NewsDetailView(
+                  news: news.elementAt(0),
+                ),
               ),
-              child: Column(
-                children: [
-                  DoubleRowString(
-                    str: NewsStringConst.trendingNo1,
-                    dateString: news.elementAt(0).publishedAt?.getDateTime(),
-                  ),
-                  const SizedBox(
-                    height: AppMagine.m8,
-                  ),
-                  Text(
-                    news.elementAt(0).title ?? NewsStringConst.title,
-                    style: Theme.of(context).textTheme.bodyLarge,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(
-                    height: AppMagine.m8,
-                  ),
-                  Row(
-                    children: [
-                      CustomButtom(
-                        onTap: () {
-                          //TODO:
-                        },
-                        child: _iconWithTitleButton(
-                          context,
-                          Icon(
-                            Icons.share,
-                            color: ColorManager.lightBlueInd,
-                          ),
-                          NewsStringConst.share,
-                        ),
-                      ),
-                      const Spacer(),
-                      CustomButtom(
-                        onTap: () {
-                          //TODO:
-                        },
-                        child: _iconWithTitleButton(
-                          context,
-                          Icon(
-                            Icons.save,
-                            color: ColorManager.lightBlueInd,
-                          ),
-                          NewsStringConst.save,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: AppPadding.p8,
-                  ),
-                ],
+            );
+          },
+          child: Column(
+            children: [
+              _buildImageView(
+                news,
+                size.height * 0.23,
+                double.infinity,
+                context,
               ),
-            ),
-          ],
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: AppPadding.p10,
+                  left: AppPadding.p10,
+                  right: AppPadding.p10,
+                ),
+                child: Column(
+                  children: [
+                    DoubleRowString(
+                      str: NewsStringConst.trendingNo1,
+                      dateString: news.elementAt(0).publishedAt?.getDateTime(),
+                    ),
+                    const SizedBox(
+                      height: AppMagine.m8,
+                    ),
+                    Text(
+                      news.elementAt(0).title ?? NewsStringConst.title,
+                      style: Theme.of(context).textTheme.bodyLarge,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(
+                      height: AppPadding.p8,
+                    ),
+                    Row(
+                      children: [
+                        CustomButton(
+                          height: AppPadding.p40,
+                          width: AppSize.s120,
+                          onTap: () {
+                            //TODO:
+                          },
+                          child: _iconWithTitleButton(
+                            context,
+                            Icon(
+                              Icons.share,
+                              color: ColorManager.lightBlueInd,
+                            ),
+                            NewsStringConst.share,
+                          ),
+                        ),
+                        const Spacer(),
+                        CustomButton(
+                          height: AppPadding.p40,
+                          width: AppSize.s120,
+                          onTap: () async {
+                            ref
+                                .read(localNewStateProvider.notifier)
+                                .saveNews(news: news.elementAt(0));
+                            Future.delayed(const Duration(seconds: 2));
+                          },
+                          child: localStateIsloading
+                              ? const CircularProgressIndicator()
+                              : _iconWithTitleButton(
+                                  context,
+                                  Icon(
+                                    Icons.save,
+                                    color: ColorManager.lightBlueInd,
+                                  ),
+                                  NewsStringConst.save,
+                                ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: AppPadding.p8,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         );
       },
       error: ((error, stackTrace) => const ErrorAnimationView()),
@@ -112,7 +141,9 @@ class HotCards extends ConsumerWidget {
           //  const Center(
           //       child: CircularProgressIndicator(),
           //     ));
-          const HotCardSkeletonLoader(),
+          const HotCardSkeletonLoader(
+        itemCount: 1,
+      ),
     );
   }
 
@@ -198,24 +229,3 @@ class HotCards extends ConsumerWidget {
     );
   }
 }
-
-
-
-
-  
-
-
-
-//  Row(
-//                             children: [
-//                               IconButton(
-//                                   onPressed: () {
-//                                     // TODO:
-//                                   },
-//                                   icon: const Icon(Icons.share)),
-//                               Text(
-//                                 'Share',
-//                                 style: Theme.of(context).textTheme.bodyMedium,
-//                               ),
-//                             ],
-//                           ),

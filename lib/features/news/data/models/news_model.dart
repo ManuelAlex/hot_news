@@ -9,7 +9,7 @@ import 'package:hot_news/features/news/presentation/constants/string_const.dart'
 class NewsModel extends News {
   const NewsModel({
     required String? newsId,
-    required Source? source,
+    required Map<String, dynamic>? source,
     required String? author,
     required String? title,
     required String? description,
@@ -31,8 +31,8 @@ class NewsModel extends News {
 
   NewsModel.fromJson({required Map<String, dynamic> json})
       : this(
-          source: SourceModel.fromJson(json[JsonStrings.source]),
-          newsId: SourceModel.fromJson(json[JsonStrings.source]).id,
+          source: json[JsonStrings.source] ?? {},
+          newsId: json[JsonStrings.source][JsonStrings.id] ?? '',
           author: json[JsonStrings.author] ?? '',
           title: json[JsonStrings.title] ?? '',
           description: json[JsonStrings.description] ?? '',
@@ -42,4 +42,32 @@ class NewsModel extends News {
           publishedAt: json[JsonStrings.publishedAt] ?? '',
           content: json[JsonStrings.content] ?? '',
         );
+
+  factory NewsModel.fromHiveJson(Map<dynamic, dynamic>? json) {
+    if (json == null) {
+      throw ArgumentError.notNull('json');
+    }
+    final stringJson = json.cast<String, dynamic>(); // Cast to String key
+
+    final source = stringJson[JsonStrings.source];
+    final sourceMap = source != null && source is Map<dynamic, dynamic>
+        ? {
+            JsonStrings.id: source[JsonStrings.id]?.toString(),
+            JsonStrings.name: source[JsonStrings.name]?.toString(),
+          }
+        : null;
+
+    return NewsModel(
+      source: sourceMap,
+      newsId: sourceMap?[JsonStrings.id] ?? '',
+      author: stringJson[JsonStrings.author] ?? '',
+      title: stringJson[JsonStrings.title] ?? '',
+      description: stringJson[JsonStrings.description] ?? '',
+      url: stringJson[JsonStrings.url] ?? '',
+      urlToImage:
+          stringJson[JsonStrings.urlToImage] ?? NewsStringConst.defaultImageUrl,
+      publishedAt: stringJson[JsonStrings.publishedAt] ?? '',
+      content: stringJson[JsonStrings.content] ?? '',
+    );
+  }
 }

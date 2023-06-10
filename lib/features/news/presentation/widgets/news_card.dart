@@ -1,14 +1,19 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hot_news/features/news/data/models/constants/json_string.dart';
 import 'package:hot_news/features/news/domain/entities/news_entity.dart';
 import 'package:hot_news/features/news/presentation/animation/loading_animation_view.dart';
 import 'package:hot_news/features/news/presentation/constants/string_const.dart';
+import 'package:hot_news/features/news/presentation/resources/color_manager.dart';
 import 'package:hot_news/features/news/presentation/resources/value_manager.dart';
 import 'package:hot_news/features/news/presentation/state_mgt/provider/get_news_provider.dart';
+import 'package:hot_news/features/news/presentation/state_mgt/provider/local_news_notifier_provider.dart';
+import 'package:hot_news/features/news/presentation/views/news_details_view.dart';
 import 'package:hot_news/features/news/presentation/widgets/double_row_string.dart';
 import 'package:hot_news/features/news/presentation/extension/date_deducer_ext.dart';
 import 'package:hot_news/features/news/presentation/widgets/news_skeleton_loader.dart';
+import 'package:hot_news/features/news/presentation/widgets/show_bottom_sheet.dart';
 
 class NewsCardList extends ConsumerWidget {
   const NewsCardList({
@@ -35,8 +40,35 @@ class NewsCardList extends ConsumerWidget {
           delegate: SliverChildBuilderDelegate(
             (context, index) {
               final news = newsList.elementAt(index);
-              return NewsCard(
-                news: news,
+              return GestureDetector(
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => NewsDetailView(
+                      news: news,
+                    ),
+                  ),
+                ),
+                child: NewsCard(
+                  news: news,
+                  onPressed: () {
+                    showBottomSheet(
+                      context: context,
+                      builder: (_) {
+                        return CustomShowBottomSheetWidget(
+                          color: ColorManager.primary,
+                          textToDisplay: 'Save',
+                          onPressed: () {
+                            ref
+                                .read(localNewStateProvider.notifier)
+                                .saveNews(news: newsList.elementAt(index));
+                            Navigator.pop(_);
+                          },
+                        );
+                      },
+                    );
+                  },
+                ),
               );
             },
             childCount: newsList.length,
@@ -57,10 +89,13 @@ class NewsCardList extends ConsumerWidget {
 
 class NewsCard extends StatelessWidget {
   final News news;
+  final VoidCallback onPressed;
+
   const NewsCard({
-    super.key,
     required this.news,
-  });
+    required this.onPressed,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -104,7 +139,7 @@ class NewsCard extends StatelessWidget {
                       children: [
                         IntrinsicHeight(
                           child: Text(
-                            news.source?.name ?? NewsStringConst.source,
+                            news.source?[0] ?? NewsStringConst.source,
                             style: Theme.of(context).textTheme.bodySmall,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -112,9 +147,7 @@ class NewsCard extends StatelessWidget {
                         ),
                         const Spacer(),
                         IconButton(
-                          onPressed: () {
-                            //TODO:
-                          },
+                          onPressed: onPressed,
                           icon: const Icon(
                             Icons.more_horiz,
                           ),

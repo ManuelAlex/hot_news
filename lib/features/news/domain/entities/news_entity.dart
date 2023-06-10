@@ -1,10 +1,10 @@
 import 'package:flutter/foundation.dart' show immutable;
-import 'package:hot_news/features/news/domain/entities/sources.dart';
 
 @immutable
 class News {
   final String? newsId;
-  final Source? source;
+  final Map<String, dynamic>? source;
+
   final String? author;
   final String? title;
   final String? description;

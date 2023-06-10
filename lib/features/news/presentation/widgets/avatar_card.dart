@@ -9,8 +9,6 @@ import 'package:hot_news/features/news/presentation/constants/string_const.dart'
 import 'package:hot_news/features/news/presentation/resources/color_manager.dart';
 import 'package:hot_news/features/news/presentation/resources/value_manager.dart';
 import 'package:hot_news/features/news/presentation/state_mgt/provider/get_cat_news_details_provider.dart';
-import 'package:hot_news/features/news/presentation/widgets/circle_avatar_loading_skeleton.dart';
-import 'package:skeleton_loader/skeleton_loader.dart';
 
 class AvatarCard extends ConsumerWidget {
   final cat.Category category;

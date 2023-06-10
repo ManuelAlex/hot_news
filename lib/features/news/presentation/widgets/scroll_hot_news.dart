@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hot_news/features/news/data/models/params.dart' as cat
     show Category;
 import 'package:hot_news/features/news/presentation/extension/int_to_category_extension.dart';
 import 'package:hot_news/features/news/presentation/resources/color_manager.dart';
 import 'package:hot_news/features/news/presentation/resources/value_manager.dart';
+import 'package:hot_news/features/news/presentation/state_mgt/provider/local_news_notifier_provider.dart';
 
 import 'package:hot_news/features/news/presentation/widgets/hot_cards.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-class ScrollHotCards extends StatelessWidget {
+class ScrollHotCards extends ConsumerWidget {
   ScrollHotCards({Key? key}) : super(key: key);
   final PageController pageController = PageController();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(
+    BuildContext context,
+    WidgetRef ref,
+  ) {
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -30,7 +35,7 @@ class ScrollHotCards extends StatelessWidget {
             ),
           ),
           const SizedBox(
-            height: AppPadding.p8,
+            height: AppPadding.p4,
           ),
           SmoothPageIndicator(
             controller: pageController,

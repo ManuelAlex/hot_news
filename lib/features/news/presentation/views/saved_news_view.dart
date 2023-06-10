@@ -6,21 +6,20 @@ import 'package:hot_news/features/news/presentation/animation/loading_animation_
 import 'package:hot_news/features/news/presentation/resources/color_manager.dart';
 import 'package:hot_news/features/news/presentation/resources/value_manager.dart';
 import 'package:hot_news/features/news/presentation/state_mgt/provider/local_news_notifier_provider.dart';
-import 'package:hot_news/features/news/presentation/state_mgt/provider/news_state_provider.dart';
-import 'package:hot_news/features/news/presentation/state_mgt/provider/search_provider.dart';
+import 'package:hot_news/features/news/presentation/state_mgt/provider/saved_news_search_provider.dart';
 import 'package:hot_news/features/news/presentation/views/news_details_view.dart';
 import 'package:hot_news/features/news/presentation/widgets/news_card.dart';
 import 'package:hot_news/features/news/presentation/widgets/news_skeleton_loader.dart';
 import 'package:hot_news/features/news/presentation/widgets/show_bottom_sheet.dart';
 
-class SearchView extends ConsumerStatefulWidget {
-  const SearchView({super.key});
+class SavedNewsView extends ConsumerStatefulWidget {
+  const SavedNewsView({super.key});
 
   @override
-  ConsumerState<SearchView> createState() => _SearchViewState();
+  ConsumerState<SavedNewsView> createState() => _SavedNewsViewState();
 }
 
-class _SearchViewState extends ConsumerState<SearchView> {
+class _SavedNewsViewState extends ConsumerState<SavedNewsView> {
   late final TextEditingController textController;
   @override
   void initState() {
@@ -36,7 +35,7 @@ class _SearchViewState extends ConsumerState<SearchView> {
 
   @override
   Widget build(BuildContext context) {
-    final newsState = ref.watch(newStateProvider);
+    final newsState = ref.watch(localNewStateProvider);
     final newsList = newsState.news;
 
     if (newsState.isLoading) {
@@ -58,14 +57,14 @@ class _SearchViewState extends ConsumerState<SearchView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Discover',
+                  'Your Saved News',
                   style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                         fontSize: AppSize.s32,
                         fontWeight: FontWeight.bold,
                       ),
                 ),
                 Text(
-                  'News from all around the world',
+                  'Search from within your saved news',
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
                 const SizedBox(
@@ -139,9 +138,16 @@ class _SearchViewState extends ConsumerState<SearchView> {
                 const SizedBox(
                   height: AppSize.s10,
                 ),
-                _allNewsOrSearchedNews(
-                  context,
-                  newsList,
+                RefreshIndicator(
+                  onRefresh: () async {
+                    return await ref
+                        .read(localNewStateProvider.notifier)
+                        .getSavedNews();
+                  },
+                  child: _allNewsOrSearchedNews(
+                    context,
+                    newsList,
+                  ),
                 ),
               ],
             ),
@@ -155,23 +161,20 @@ class _SearchViewState extends ConsumerState<SearchView> {
     BuildContext context,
     Iterable<News> newsList,
   ) {
-    final searchNews = ref.watch(searchNewsProvider(textController.text));
+    final searchNews = ref.watch(savedNewsSearchProvider(textController.text));
     if (textController.text.isEmpty) {
       return SizedBox(
         height: MediaQuery.of(context).size.height * 0.65,
         child: ListView.builder(
           itemBuilder: (context, index) {
             return GestureDetector(
-              onTap: () {
-                Navigator.push(
+              onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => NewsDetailView(
                       news: newsList.elementAt(index),
                     ),
-                  ),
-                );
-              },
+                  )),
               child: NewsCard(
                 news: newsList.elementAt(index),
                 onPressed: () {
@@ -179,12 +182,12 @@ class _SearchViewState extends ConsumerState<SearchView> {
                     context: context,
                     builder: (_) {
                       return CustomShowBottomSheetWidget(
-                        color: ColorManager.primary,
-                        textToDisplay: 'Save',
+                        color: Colors.red,
+                        textToDisplay: 'Delete',
                         onPressed: () {
                           ref
                               .read(localNewStateProvider.notifier)
-                              .saveNews(news: newsList.elementAt(index));
+                              .deleteNews(newsIndex: index);
                           Navigator.pop(_);
                           ref
                               .read(localNewStateProvider.notifier)
@@ -211,40 +214,28 @@ class _SearchViewState extends ConsumerState<SearchView> {
           height: MediaQuery.of(context).size.height * 0.65,
           child: ListView.builder(
             itemBuilder: (context, index) {
-              return GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => NewsDetailView(
-                        news: newsResult.elementAt(index),
-                      ),
-                    ),
+              return NewsCard(
+                news: newsResult.elementAt(index),
+                onPressed: () {
+                  showBottomSheet(
+                    context: context,
+                    builder: (_) {
+                      return CustomShowBottomSheetWidget(
+                        color: ColorManager.primary,
+                        textToDisplay: 'Save',
+                        onPressed: () {
+                          ref
+                              .read(localNewStateProvider.notifier)
+                              .deleteNews(newsIndex: index);
+                          Navigator.pop(_);
+                          ref
+                              .read(localNewStateProvider.notifier)
+                              .getSavedNews();
+                        },
+                      );
+                    },
                   );
                 },
-                child: NewsCard(
-                  news: newsResult.elementAt(index),
-                  onPressed: () {
-                    showBottomSheet(
-                      context: context,
-                      builder: (_) {
-                        return CustomShowBottomSheetWidget(
-                          color: ColorManager.primary,
-                          textToDisplay: 'Save',
-                          onPressed: () {
-                            ref
-                                .read(localNewStateProvider.notifier)
-                                .saveNews(news: newsResult.elementAt(index));
-                            Navigator.pop(_);
-                            ref
-                                .read(localNewStateProvider.notifier)
-                                .getSavedNews();
-                          },
-                        );
-                      },
-                    );
-                  },
-                ),
               );
             },
             itemCount: newsResult.length,
@@ -261,9 +252,9 @@ class CustomContainer extends ConsumerWidget {
   final String textString;
 
   CustomContainer({
-    super.key,
+    Key? key,
     required this.textString,
-  });
+  }) : super(key: key);
   bool onPressed = false;
 
   @override
@@ -275,9 +266,10 @@ class CustomContainer extends ConsumerWidget {
       (ref) {
         if (!onPressed) {
           onPressed = true;
-
+          print(onPressed);
           return onPressed;
         } else {
+          print(onPressed);
           return onPressed;
         }
       },

@@ -2,23 +2,37 @@ import 'package:flutter/material.dart';
 import 'package:hot_news/features/news/presentation/resources/color_manager.dart';
 import 'package:hot_news/features/news/presentation/resources/value_manager.dart';
 
-class CustomButtom extends StatelessWidget {
+class CustomButton extends StatelessWidget {
   final Widget child;
+  final Color? color;
   final VoidCallback onTap;
-  const CustomButtom({
+  final double height;
+  final double width;
+
+  const CustomButton({
     required this.child,
     required this.onTap,
-    super.key,
-  });
+    this.height = AppSize.s50,
+    this.width = AppSize.s50,
+    this.color,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: ColorManager.lightBlue,
-        borderRadius: BorderRadius.circular(AppRadius.r16),
+    final buttonColor = color ?? ColorManager.lightBlue;
+
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: height,
+        width: width,
+        decoration: BoxDecoration(
+          color: buttonColor,
+          borderRadius: BorderRadius.circular(AppRadius.r16),
+        ),
+        child: child,
       ),
-      child: child,
     );
   }
 }

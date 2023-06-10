@@ -1,17 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hot_news/features/news/presentation/animation/loading_animation_view.dart';
 import 'package:hot_news/features/news/presentation/resources/color_manager.dart';
-import 'package:hot_news/features/news/presentation/resources/value_manager.dart';
 import 'package:hot_news/features/news/presentation/views/headline_news_view.dart';
-import 'package:hot_news/features/news/presentation/views/hot_card_skeleton_loader.dart';
+import 'package:hot_news/features/news/presentation/views/saved_news_view.dart';
 import 'package:hot_news/features/news/presentation/views/search_view.dart';
-import 'package:hot_news/features/news/presentation/widgets/circle_avatar_loading_skeleton.dart';
 import 'package:hot_news/main.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
-//import 'package:hot_news/features/news/data/models/params.dart' as cat
-//   show Category;
-import 'package:skeleton_loader/skeleton_loader.dart';
 
 class MainView extends ConsumerWidget {
   const MainView({super.key});
@@ -49,10 +43,12 @@ class MainView extends ConsumerWidget {
 
   List<Widget> _buildScreens() {
     return [
-      const WorldNews(),
-      const Saved(),
+      const HeadLineNewsView(),
+      const SearchView(),
+      const SavedNewsView(),
       MyHomePage(),
-      const Profile(),
+
+      //  const Profile(),
     ];
   }
 
@@ -91,65 +87,7 @@ class WorldNews extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    return SkeletonLoader(
-      builder: Column(
-        children: [
-          const SingleChildScrollView(
-            child: Row(
-              children: [
-                Padding(
-                  padding: EdgeInsets.all(
-                    AppPadding.p8,
-                  ),
-                  child: CircleAvatar(
-                    radius: AppSize.s50,
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(
-                    AppPadding.p8,
-                  ),
-                  child: CircleAvatar(
-                    radius: AppSize.s50,
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(
-                    AppPadding.p8,
-                  ),
-                  child: CircleAvatar(
-                    radius: AppSize.s50,
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(
-                    AppPadding.p8,
-                  ),
-                  child: CircleAvatar(
-                    radius: AppSize.s50,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          CircleAvataLoadingSkeleton(),
-          Padding(
-            padding: const EdgeInsets.all(AppPadding.p4),
-            child: CircleAvatar(
-              child: CircularProgressIndicator(
-                strokeWidth: AppMagine.m16,
-                color: Colors.grey[300],
-              ),
-            ),
-          ),
-        ],
-      ),
-      items: 1,
-      period: Duration(seconds: 2),
-      highlightColor: Colors.grey,
-      direction: SkeletonDirection.ttb,
-    );
+    return const SavedNewsView();
   }
 }
 

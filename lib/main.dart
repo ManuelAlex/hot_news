@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hot_news/app_cores/injection_container.dart' as injection;
 import 'package:hot_news/app_cores/injection_container.dart';
 import 'package:hot_news/app_cores/network/network_info.dart';
+import 'package:hot_news/features/news/data/data_sources/local_data_sources.dart';
 import 'package:hot_news/features/news/data/repositories/new_repo_impl.dart';
 import 'package:hot_news/features/news/domain/repositories/new_repo.dart';
 import 'package:hot_news/features/news/presentation/animation/loading_animation_view.dart';
@@ -13,11 +15,13 @@ import 'package:http/http.dart';
 
 import 'features/news/data/data_sources/news_remote_data_source.dart';
 import 'features/news/presentation/state_mgt/provider/news_state_provider.dart';
-import 'features/news/presentation/views/main_view.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   injection.init();
+  await Hive.initFlutter();
+
   runApp(
     const ProviderScope(
       child: MyApp(),
@@ -32,6 +36,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: NewsStringConst.appName,
+      debugShowCheckedModeBanner: false,
       theme: getThemeData(),
       onGenerateRoute: RouteGenerator.getRoute,
       initialRoute: Routes.splashScreen,
@@ -48,6 +53,7 @@ class MyHomePage extends ConsumerWidget {
   final NewsRepository repoImp = NewRepositaryImpl(
     netWorkInfo: sl<NetWorkInfo>(),
     newsRemoteDataSource: sl<NewsRemoteDataSource>(),
+    localDataSources: sl<LocalDataSources>(),
   );
 
   @override

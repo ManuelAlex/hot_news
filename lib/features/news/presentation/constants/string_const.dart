@@ -16,10 +16,15 @@ class NewsStringConst {
   static const String defaultCat = 'businness';
   static const String trendingNo1 = '🚀  Trending No 1';
   static const String today = 'Today';
+  static const String writtenBy = 'Written by';
+  static const String unKnownAuthor = 'UnKnown author';
   static const String title = 'No Title';
   static const String author = 'No author';
   static const String save = 'Save';
   static const String share = 'Share';
   static const String source = 'Source';
+  static const String noContent = 'oops no content';
+
+  static const String clickLink = "Click to visit source website";
   static const String localImageSource = 'assets/images/news_image.jpg';
 }

@@ -7,6 +7,7 @@ import 'package:hot_news/features/news/presentation/resources/value_manager.dart
 ThemeData getThemeData() => ThemeData(
       //main app color
       primaryColor: ColorManager.primary,
+      useMaterial3: true,
 
       //card color
       cardTheme: CardTheme(
@@ -36,12 +37,12 @@ ThemeData getThemeData() => ThemeData(
         ),
         bodyMedium: getItalics(
           color: ColorManager.darkGrey,
-          fontSize: FontSize.s12,
+          fontSize: FontSize.s18,
         ),
       ),
       //appBar theme
       appBarTheme: AppBarTheme(
-        color: ColorManager.primary,
+        color: ColorManager.white,
         centerTitle: true,
         elevation: AppSize.s0,
         titleTextStyle: getRegular(

@@ -3,7 +3,7 @@ import 'package:hot_news/features/news/presentation/resources/value_manager.dart
 import 'package:skeleton_loader/skeleton_loader.dart';
 
 class HotCardSkeletonLoader extends StatelessWidget {
-  const HotCardSkeletonLoader({super.key});
+  const HotCardSkeletonLoader({super.key, required int itemCount});
 
   @override
   Widget build(BuildContext context) {
