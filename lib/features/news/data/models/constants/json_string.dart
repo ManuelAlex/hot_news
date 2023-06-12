@@ -1,6 +1,7 @@
 class JsonStrings {
   JsonStrings._();
   static const String id = 'id';
+  static const String newsId = 'newsId';
   static const String name = 'name';
   static const String source = 'source';
   static const String author = 'author';

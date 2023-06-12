@@ -75,9 +75,9 @@ class NewRepositaryImpl extends NewsRepository {
   }
 
   @override
-  Future<bool> deleteNewslocally({required int newsIndex}) async {
+  Future<bool> deleteNewslocally({required String keyString}) async {
     final result = await localDataSources.deleteNewLocally(
-      newsIndex: newsIndex,
+      keyString: keyString,
     );
     if (result) {
       return true;

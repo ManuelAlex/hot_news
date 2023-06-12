@@ -40,8 +40,8 @@ class DeleteLocalNewsUsecase implements DeletNewsUseCase {
   const DeleteLocalNewsUsecase({required this.repository});
 
   @override
-  Future<bool> delete({required int newsIndex}) async {
-    if (await repository.deleteNewslocally(newsIndex: newsIndex)) {
+  Future<bool> delete({required String keyString}) async {
+    if (await repository.deleteNewslocally(keyString: keyString)) {
       return true;
     } else {
       return false;

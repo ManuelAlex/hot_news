@@ -1,9 +1,8 @@
 import 'package:flutter/foundation.dart' show immutable;
 import 'package:hot_news/features/news/data/models/constants/json_string.dart';
-import 'package:hot_news/features/news/data/models/source_model.dart';
 import 'package:hot_news/features/news/domain/entities/news_entity.dart';
-import 'package:hot_news/features/news/domain/entities/sources.dart';
 import 'package:hot_news/features/news/presentation/constants/string_const.dart';
+import 'package:uuid/uuid.dart';
 
 @immutable
 class NewsModel extends News {
@@ -32,7 +31,7 @@ class NewsModel extends News {
   NewsModel.fromJson({required Map<String, dynamic> json})
       : this(
           source: json[JsonStrings.source] ?? {},
-          newsId: json[JsonStrings.source][JsonStrings.id] ?? '',
+          newsId: json[JsonStrings.newsId] ?? const Uuid().v4(),
           author: json[JsonStrings.author] ?? '',
           title: json[JsonStrings.title] ?? '',
           description: json[JsonStrings.description] ?? '',
@@ -47,8 +46,7 @@ class NewsModel extends News {
     if (json == null) {
       throw ArgumentError.notNull('json');
     }
-    final stringJson = json.cast<String, dynamic>(); // Cast to String key
-
+    final stringJson = json.cast<String, dynamic>();
     final source = stringJson[JsonStrings.source];
     final sourceMap = source != null && source is Map<dynamic, dynamic>
         ? {
@@ -59,7 +57,7 @@ class NewsModel extends News {
 
     return NewsModel(
       source: sourceMap,
-      newsId: sourceMap?[JsonStrings.id] ?? '',
+      newsId: stringJson[JsonStrings.newsId],
       author: stringJson[JsonStrings.author] ?? '',
       title: stringJson[JsonStrings.title] ?? '',
       description: stringJson[JsonStrings.description] ?? '',

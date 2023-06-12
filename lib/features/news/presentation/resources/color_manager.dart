@@ -9,6 +9,7 @@ class ColorManager {
   static Color white = "#ffffff".stringToColor();
   static Color customGrey = "#737373".stringToColor();
   static Color lightGrey = "#ebedeb".stringToColor();
+  static Color grey = "#d4d2d2".stringToColor();
 
   static Color black = '#0c0d0c'.stringToColor();
   static Color lightBlue = "#b3e0ff".stringToColor();

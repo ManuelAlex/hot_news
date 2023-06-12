@@ -4,7 +4,7 @@ import 'package:hot_news/features/news/presentation/resources/color_manager.dart
 import 'package:hot_news/features/news/presentation/views/headline_news_view.dart';
 import 'package:hot_news/features/news/presentation/views/saved_news_view.dart';
 import 'package:hot_news/features/news/presentation/views/search_view.dart';
-import 'package:hot_news/main.dart';
+import 'package:hot_news/features/news/presentation/widgets/custom_chips.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
 class MainView extends ConsumerWidget {
@@ -46,7 +46,7 @@ class MainView extends ConsumerWidget {
       const HeadLineNewsView(),
       const SearchView(),
       const SavedNewsView(),
-      MyHomePage(),
+      const NewsChipWrap(),
 
       //  const Profile(),
     ];

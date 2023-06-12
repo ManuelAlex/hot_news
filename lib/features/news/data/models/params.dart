@@ -30,9 +30,9 @@ enum Country {
 }
 
 enum Category {
+  general,
   business,
   entertainment,
-  general,
   health,
   science,
   sports,

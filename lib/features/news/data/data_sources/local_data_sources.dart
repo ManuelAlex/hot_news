@@ -1,19 +1,15 @@
 import 'dart:collection';
-import 'dart:convert';
-
 import 'package:flutter/foundation.dart' show immutable;
 import 'package:hot_news/features/news/data/models/constants/json_string.dart';
 import 'package:hot_news/features/news/data/models/news_model.dart';
 import 'package:hot_news/features/news/domain/entities/news_entity.dart';
 import 'package:hive/hive.dart';
-import 'package:hot_news/features/news/domain/entities/sources.dart';
-import 'package:uuid/uuid.dart';
 
 @immutable
 abstract class LocalDataSources {
   Future<Iterable<News>> getLocalCachedNews();
   Future<bool> saveNewLocally({required News news});
-  Future<bool> deleteNewLocally({required int newsIndex});
+  Future<bool> deleteNewLocally({required String keyString});
 }
 
 const boxName = "NEWS_BOX";
@@ -41,13 +37,8 @@ class LocalDataSourcesImpl implements LocalDataSources {
   Future<bool> saveNewLocally({
     required News news,
   }) async {
-    await hiveInterface.openBox(boxName);
-    final newsCollection = hiveInterface.box(
-      boxName,
-    );
-    final uuid = const Uuid().v4();
     final payload = LocalNewsHivePayLoad(
-      newsId: uuid,
+      newsId: news.newsId!,
       source: {
         FieldModelConst.id: news.source?[JsonStrings.id] ?? '',
         FieldModelConst.name: news.source?[JsonStrings.name] ?? '',
@@ -62,8 +53,16 @@ class LocalDataSourcesImpl implements LocalDataSources {
     );
 
     try {
-      await newsCollection.add(payload);
-      print(newsCollection.toMap().keys);
+      await hiveInterface.openBox(boxName);
+      final newsCollection = hiveInterface.box(
+        boxName,
+      );
+      if (newsCollection.containsKey(news.newsId!)) {
+        print('already added ${news.newsId}');
+      } else {
+        await newsCollection.put(news.newsId, payload);
+      }
+
       return true;
     } catch (_) {
       return false;
@@ -71,13 +70,18 @@ class LocalDataSourcesImpl implements LocalDataSources {
   }
 
   @override
-  Future<bool> deleteNewLocally({required int newsIndex}) async {
+  Future<bool> deleteNewLocally({required String keyString}) async {
     await hiveInterface.openBox(boxName);
     final newsCollection = hiveInterface.box(boxName);
 
     try {
-      newsCollection.delete(newsIndex);
       print(newsCollection.toMap().keys);
+      if (newsCollection.containsKey(keyString)) {
+        newsCollection.delete(keyString);
+      } else {
+        print("Item Not found");
+      }
+
       return true;
     } catch (_) {
       return false;

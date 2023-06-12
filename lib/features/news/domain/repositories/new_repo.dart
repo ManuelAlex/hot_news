@@ -22,6 +22,6 @@ abstract class NewsRepository {
     required News news,
   });
   Future<bool> deleteNewslocally({
-    required int newsIndex,
+    required String keyString,
   });
 }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hot_news/app_cores/extensions/constants/strings_ext.dart';
 import 'package:hot_news/features/news/domain/entities/news_entity.dart';
 import 'package:hot_news/features/news/presentation/animation/loading_animation_view.dart';
 import 'package:hot_news/features/news/presentation/resources/color_manager.dart';
@@ -8,6 +7,7 @@ import 'package:hot_news/features/news/presentation/resources/value_manager.dart
 import 'package:hot_news/features/news/presentation/state_mgt/provider/local_news_notifier_provider.dart';
 import 'package:hot_news/features/news/presentation/state_mgt/provider/saved_news_search_provider.dart';
 import 'package:hot_news/features/news/presentation/views/news_details_view.dart';
+import 'package:hot_news/features/news/presentation/widgets/custom_chips.dart';
 import 'package:hot_news/features/news/presentation/widgets/news_card.dart';
 import 'package:hot_news/features/news/presentation/widgets/news_skeleton_loader.dart';
 import 'package:hot_news/features/news/presentation/widgets/show_bottom_sheet.dart';
@@ -104,37 +104,7 @@ class _SavedNewsViewState extends ConsumerState<SavedNewsView> {
                 const SizedBox(
                   height: 10,
                 ),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      CustomContainer(
-                        textString: Strings.general,
-                      ),
-                      CustomContainer(
-                        textString: Strings.business,
-                      ),
-                      CustomContainer(
-                        textString: Strings.science,
-                      ),
-                      CustomContainer(
-                        textString: Strings.sports,
-                      ),
-                      CustomContainer(
-                        textString: Strings.technology,
-                      ),
-                      CustomContainer(
-                        textString: Strings.entertainment,
-                      ),
-                      CustomContainer(
-                        textString: Strings.health,
-                      ),
-                      const SizedBox(
-                        height: AppPadding.p16,
-                      ),
-                    ],
-                  ),
-                ),
+                const NewsChipWrap(),
                 const SizedBox(
                   height: AppSize.s10,
                 ),
@@ -185,9 +155,16 @@ class _SavedNewsViewState extends ConsumerState<SavedNewsView> {
                         color: Colors.red,
                         textToDisplay: 'Delete',
                         onPressed: () {
-                          ref
-                              .read(localNewStateProvider.notifier)
-                              .deleteNews(newsIndex: index);
+                          if (newsList.elementAt(index).newsId == null) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Unable to delete at the moment'),
+                              ),
+                            );
+                            return;
+                          }
+                          ref.read(localNewStateProvider.notifier).deleteNews(
+                              keyString: newsList.elementAt(index).newsId!);
                           Navigator.pop(_);
                           ref
                               .read(localNewStateProvider.notifier)
@@ -224,9 +201,16 @@ class _SavedNewsViewState extends ConsumerState<SavedNewsView> {
                         color: ColorManager.primary,
                         textToDisplay: 'Save',
                         onPressed: () {
-                          ref
-                              .read(localNewStateProvider.notifier)
-                              .deleteNews(newsIndex: index);
+                          if (newsList.elementAt(index).newsId == null) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Unable to delete at the moment'),
+                              ),
+                            );
+                            return;
+                          }
+                          ref.read(localNewStateProvider.notifier).deleteNews(
+                              keyString: newsResult.elementAt(index).newsId!);
                           Navigator.pop(_);
                           ref
                               .read(localNewStateProvider.notifier)
@@ -244,69 +228,6 @@ class _SavedNewsViewState extends ConsumerState<SavedNewsView> {
       },
       error: (error, stackTrace) => const ErrorAnimationView(),
       loading: () => const NewsCardSkeletonLoader(itemCount: 3),
-    );
-  }
-}
-
-class CustomContainer extends ConsumerWidget {
-  final String textString;
-
-  CustomContainer({
-    Key? key,
-    required this.textString,
-  }) : super(key: key);
-  bool onPressed = false;
-
-  @override
-  Widget build(
-    BuildContext context,
-    WidgetRef ref,
-  ) {
-    final boolProvider = Provider(
-      (ref) {
-        if (!onPressed) {
-          onPressed = true;
-          print(onPressed);
-          return onPressed;
-        } else {
-          print(onPressed);
-          return onPressed;
-        }
-      },
-    );
-    final onPressedState = ref.watch(boolProvider);
-    return GestureDetector(
-      onTap: () {
-        ref.read(boolProvider);
-      },
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Container(
-          height: 44,
-          decoration: BoxDecoration(
-            color: onPressedState ? ColorManager.primary : Colors.grey[300],
-            borderRadius: BorderRadius.circular(
-              AppRadius.r32,
-            ),
-          ),
-          child: IntrinsicWidth(
-              child: Padding(
-            padding: const EdgeInsets.only(
-                top: AppPadding.p12,
-                left: AppPadding.p16,
-                right: AppPadding.p16),
-            child: Text(
-              textString,
-              style: onPressedState
-                  ? Theme.of(context)
-                      .textTheme
-                      .bodySmall!
-                      .copyWith(color: ColorManager.white)
-                  : Theme.of(context).textTheme.bodySmall,
-            ),
-          )),
-        ),
-      ),
     );
   }
 }

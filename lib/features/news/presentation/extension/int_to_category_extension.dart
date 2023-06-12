@@ -28,3 +28,30 @@ extension IndexToString on int {
     throw Exception();
   }
 }
+
+extension CatToIndex on cat.Category {
+  int catToInt() {
+    switch (this) {
+      case cat.Category.general:
+        return 0;
+
+      case cat.Category.entertainment:
+        return 1;
+
+      case cat.Category.business:
+        return 2;
+
+      case cat.Category.health:
+        return 3;
+
+      case cat.Category.science:
+        return 4;
+
+      case cat.Category.sports:
+        return 5;
+
+      case cat.Category.technology:
+        return 6;
+    }
+  }
+}

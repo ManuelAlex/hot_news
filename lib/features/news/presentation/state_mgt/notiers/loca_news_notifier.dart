@@ -16,13 +16,11 @@ class LocalNewsNotifier extends StateNotifier<NewsState> {
   }) : super(
           const NewsState.initial(),
         ) {
-    print('calling local saved news');
     getSavedNews();
   }
   Future<void> getSavedNews() async {
     state = state.copyWithIsLoading(true);
     try {
-      print('calling------------- local saved news');
       final result = await getLocalNewsUsecase.getCachedNews();
       state = NewsState(
           news: result.news,
@@ -40,7 +38,6 @@ class LocalNewsNotifier extends StateNotifier<NewsState> {
   }
 
   Future<void> saveNews({required News news}) async {
-    print('calling local saved  function');
     state = state.copyWithIsLoading(true);
 
     if (await saveLocalNewsUsecase.save(news: news)) {
@@ -58,10 +55,10 @@ class LocalNewsNotifier extends StateNotifier<NewsState> {
     }
   }
 
-  Future<void> deleteNews({required int newsIndex}) async {
+  Future<void> deleteNews({required String keyString}) async {
     state = state.copyWithIsLoading(true);
 
-    if (await deleteLocalNewsUsecase.delete(newsIndex: newsIndex)) {
+    if (await deleteLocalNewsUsecase.delete(keyString: keyString)) {
       state = NewsState(
           news: state.news,
           result: Result.success,

@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hot_news/features/news/data/models/constants/json_string.dart';
 import 'package:hot_news/features/news/domain/entities/news_entity.dart';
 import 'package:hot_news/features/news/presentation/animation/loading_animation_view.dart';
 import 'package:hot_news/features/news/presentation/constants/string_const.dart';

@@ -21,6 +21,6 @@ abstract class SaveNewsUseCase {
 
 abstract class DeletNewsUseCase {
   Future<bool> delete({
-    required int newsIndex,
+    required String keyString,
   });
 }
