@@ -27,8 +27,6 @@ class OnBoardingChipNotifier extends StateNotifier<OnBoardingState> {
     currentState[index] = !currentState[index];
     state.catBoolList = currentState;
     await appPrefs.putCategory(category: index.intToCategory());
-
-    print(await appPrefs.getAppCategory());
     state = OnBoardingState(
       catBoolList: currentState,
       countryIndex: state.countryIndex,

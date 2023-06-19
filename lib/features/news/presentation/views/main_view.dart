@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hive/hive.dart';
-import 'package:hot_news/app_cores/app_prefs.dart';
-import 'package:hot_news/app_cores/injection_container.dart';
 import 'package:hot_news/features/news/presentation/constants/string_const.dart';
 import 'package:hot_news/features/news/presentation/resources/color_manager.dart';
 import 'package:hot_news/features/news/presentation/resources/value_manager.dart';
-import 'package:hot_news/features/news/presentation/state_mgt/provider/cat_chip_state_provider.dart';
 import 'package:hot_news/features/news/presentation/views/headline_news_view.dart';
-import 'package:hot_news/features/news/presentation/views/onboarding_chips_view.dart';
 import 'package:hot_news/features/news/presentation/views/saved_news_view.dart';
 import 'package:hot_news/features/news/presentation/views/search_view.dart';
 import 'package:hot_news/features/news/presentation/views/settings_view.dart';

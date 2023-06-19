@@ -1,10 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:hot_news/app_cores/app_prefs.dart';
 import 'package:hot_news/app_cores/injection_container.dart';
-import 'package:hot_news/features/news/data/models/params.dart';
 import 'package:hot_news/features/news/presentation/constants/string_const.dart';
 import 'package:hot_news/features/news/presentation/resources/color_manager.dart';
 import 'package:hot_news/features/news/presentation/resources/routes_manager.dart';
@@ -24,6 +22,7 @@ class _SplashScreenState extends State<SplashScreen> {
       final setAppState = sl<AppPreferences>().getAppPrefBoolState();
       final state = await setAppState;
       if (state == null || false) {
+        // ignore: use_build_context_synchronously
         await Navigator.pushReplacement(
           context,
           RouteGenerator.getRoute(
@@ -31,6 +30,7 @@ class _SplashScreenState extends State<SplashScreen> {
           ),
         );
       } else {
+        // ignore: use_build_context_synchronously
         await Navigator.pushReplacement(
           context,
           RouteGenerator.getRoute(

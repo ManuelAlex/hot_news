@@ -180,6 +180,7 @@ class _SavedNewsViewState extends ConsumerState<SavedNewsView> {
                           }
                           ref.read(localNewStateProvider.notifier).deleteNews(
                               keyString: newsList.elementAt(index).newsId!);
+                          ref.refresh(localNewStateProvider);
                           Navigator.pop(_);
                         },
                       );

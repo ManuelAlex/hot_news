@@ -154,8 +154,11 @@ class OnBoardingCountryChips extends ConsumerWidget {
 }
 
 class NextButton extends ConsumerWidget {
-  bool isSettingsView;
-  NextButton({this.isSettingsView = false, Key? key}) : super(key: key);
+  final bool isSettingsView;
+  const NextButton({
+    this.isSettingsView = false,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(
