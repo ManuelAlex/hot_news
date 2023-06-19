@@ -5,6 +5,7 @@ import 'package:hot_news/app_cores/app_prefs.dart';
 import 'package:hot_news/app_cores/injection_container.dart';
 import 'package:hot_news/features/news/presentation/constants/string_const.dart';
 import 'package:hot_news/features/news/presentation/resources/color_manager.dart';
+import 'package:hot_news/features/news/presentation/resources/value_manager.dart';
 import 'package:hot_news/features/news/presentation/state_mgt/provider/cat_chip_state_provider.dart';
 import 'package:hot_news/features/news/presentation/views/headline_news_view.dart';
 import 'package:hot_news/features/news/presentation/views/onboarding_chips_view.dart';
@@ -24,26 +25,13 @@ class MainView extends ConsumerWidget {
     return PersistentTabView(
       context,
       controller: controller,
-      bottomScreenMargin: 0,
+      bottomScreenMargin: AppSize.s0,
       screens: _buildScreens(),
       items: _navBarsItems(),
-      confineInSafeArea: true,
       decoration: NavBarDecoration(
-        borderRadius: BorderRadius.circular(10.0),
-        colorBehindNavBar: Colors.white,
+        borderRadius: BorderRadius.circular(AppSize.s10),
+        colorBehindNavBar: ColorManager.white,
       ),
-      popAllScreensOnTapOfSelectedTab: true,
-      popActionScreens: PopActionScreensType.all,
-      itemAnimationProperties: const ItemAnimationProperties(
-        duration: Duration(milliseconds: 200),
-        curve: Curves.ease,
-      ),
-      screenTransitionAnimation: const ScreenTransitionAnimation(
-        animateTabTransition: true,
-        curve: Curves.ease,
-        duration: Duration(milliseconds: 200),
-      ),
-      navBarStyle: NavBarStyle.style1,
     );
   }
 
