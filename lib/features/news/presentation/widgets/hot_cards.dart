@@ -16,6 +16,8 @@ import 'package:hot_news/features/news/presentation/views/hot_card_skeleton_load
 import 'package:hot_news/features/news/presentation/views/news_details_view.dart';
 import 'package:hot_news/features/news/presentation/widgets/custom_button.dart';
 import 'package:hot_news/features/news/presentation/widgets/double_row_string.dart';
+import 'package:hot_news/features/news/presentation/widgets/show_bottom_sheet.dart';
+import 'package:share_plus/share_plus.dart';
 
 class HotCards extends ConsumerWidget {
   final cat.Category category;
@@ -43,13 +45,14 @@ class HotCards extends ConsumerWidget {
         if (news == null) {
           return const NotFoundAnimationView();
         }
+
         return GestureDetector(
           onTap: () {
             Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => NewsDetailView(
-                  news: news.elementAt(0),
+                  news: news.first,
                 ),
               ),
             );
@@ -72,13 +75,13 @@ class HotCards extends ConsumerWidget {
                   children: [
                     DoubleRowString(
                       str: NewsStringConst.trendingNo1,
-                      dateString: news.elementAt(0).publishedAt?.getDateTime(),
+                      dateString: news.first.publishedAt?.getDateTime(),
                     ),
                     const SizedBox(
                       height: AppMagine.m8,
                     ),
                     Text(
-                      news.elementAt(0).title ?? NewsStringConst.title,
+                      news.first.title ?? NewsStringConst.title,
                       style: Theme.of(context).textTheme.bodyLarge,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -89,29 +92,56 @@ class HotCards extends ConsumerWidget {
                     Row(
                       children: [
                         CustomButton(
-                          height: AppPadding.p40,
+                          height: AppSize.s35,
                           width: AppSize.s120,
                           onTap: () {
-                            //TODO:
+                            showBottomSheet(
+                              context: context,
+                              builder: (_) {
+                                return CustomShowBottomSheetWidget(
+                                  isDouble: false,
+                                  color: ColorManager.primary,
+                                  textToDisplay: NewsStringConst.share,
+                                  onPressed: () {
+                                    Share.share('${news.elementAt(0).url}',
+                                        subject: NewsStringConst.checkNews);
+                                    Navigator.of(context).pop();
+                                  },
+                                );
+                              },
+                            );
                           },
                           child: _iconWithTitleButton(
                             context,
                             Icon(
                               Icons.share,
                               color: ColorManager.lightBlueInd,
+                              size: AppSize.s22,
                             ),
                             NewsStringConst.share,
                           ),
                         ),
                         const Spacer(),
                         CustomButton(
-                          height: AppPadding.p40,
+                          height: AppSize.s35,
                           width: AppSize.s120,
                           onTap: () async {
-                            ref
-                                .read(localNewStateProvider.notifier)
-                                .saveNews(news: news.elementAt(0));
-                            Future.delayed(const Duration(seconds: 2));
+                            showBottomSheet(
+                              context: context,
+                              builder: (_) {
+                                return CustomShowBottomSheetWidget(
+                                  isDouble: false,
+                                  color: ColorManager.primary,
+                                  textToDisplay: NewsStringConst.save,
+                                  onPressed: () {
+                                    ref
+                                        .read(localNewStateProvider.notifier)
+                                        .saveNews(news: news.elementAt(0));
+                                    Navigator.pop(_);
+                                  },
+                                );
+                              },
+                            );
                           },
                           child: localStateIsloading
                               ? const CircularProgressIndicator()
@@ -120,6 +150,7 @@ class HotCards extends ConsumerWidget {
                                   Icon(
                                     Icons.save,
                                     color: ColorManager.lightBlueInd,
+                                    size: AppSize.s22,
                                   ),
                                   NewsStringConst.save,
                                 ),
@@ -157,18 +188,16 @@ class HotCards extends ConsumerWidget {
       child: SizedBox(
         height: AppSize.s35,
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            IconButton(
-                onPressed: () {
-                  // TODO:
-                },
-                icon: icon),
+            icon,
+            const SizedBox(
+              width: AppSize.s8,
+            ),
             Text(
               string,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyMedium!
-                  .copyWith(color: ColorManager.lightBlueInd),
+              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  color: ColorManager.lightBlueInd, fontSize: AppRadius.r12),
             ),
           ],
         ),
@@ -215,7 +244,7 @@ class HotCards extends ConsumerWidget {
                         right: AppPadding.p10,
                       ),
                       child: Text(
-                        getCategory(category) ?? NewsStringConst.defaultCat,
+                        getCategory(category),
                         style: Theme.of(context).textTheme.headlineSmall,
                       ),
                     ),

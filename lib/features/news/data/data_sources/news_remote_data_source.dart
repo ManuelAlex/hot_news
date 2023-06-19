@@ -11,7 +11,9 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart' show immutable;
-import 'package:hot_news/app_cores/extensions/strings_from_category.dart';
+import 'package:hive/hive.dart';
+import 'package:hot_news/app_cores/app_prefs.dart';
+import 'package:hot_news/app_cores/injection_container.dart';
 import 'package:hot_news/features/news/data/api_constants.dart';
 import 'package:hot_news/features/news/data/models/news_model.dart';
 import 'package:hot_news/features/news/data/models/params.dart';
@@ -20,13 +22,13 @@ import 'package:http/http.dart' as http;
 @immutable
 abstract class NewsRemoteDataSource {
   Future<Iterable<NewsModel>> getNewsHeadLines({
-    required Params params,
+    required AppPreferences appPreferences,
   });
   Future<Iterable<NewsModel>> getAllNews({
-    required Params params,
+    required AppPreferences appPreferences,
   });
   Future<Iterable<NewsModel>> searchAllNews({
-    required Params params,
+    required AppPreferences appPreferences,
   });
 }
 
@@ -38,34 +40,38 @@ class NewsRemoteDataSourceImpl implements NewsRemoteDataSource {
 
   @override
   Future<Iterable<NewsModel>> getAllNews({
-    required Params params,
+    required AppPreferences appPreferences,
   }) =>
-      _getNews(params: params);
+      _getNews(
+          appPreferences: AppPreferences(
+              hiveInterface: sl<HiveInterface>(), params: const Params()));
 
   @override
   Future<Iterable<NewsModel>> getNewsHeadLines({
-    required Params params,
+    required AppPreferences appPreferences,
   }) =>
-      _getNews(params: params);
+      _getNews(appPreferences: appPreferences);
 
   @override
   Future<Iterable<NewsModel>> searchAllNews({
-    required Params params,
+    required AppPreferences appPreferences,
   }) =>
-      _getNews(params: params);
+      _getNews(appPreferences: appPreferences);
 
   Future<Iterable<NewsModel>> _getNews({
-    required Params params,
+    required AppPreferences appPreferences,
   }) async {
-    String generalKeyword =
-        getCategory(params.category) ?? Constants.generalKeyword;
+    final generalKeyword = await appPreferences.getAppCategory();
+
+    final strCountry = await appPreferences.getAppCountry();
+
     Map<String, String> requestHeaders = {
       'Content-type': 'application/json',
     };
 
     final response = await client.get(
       Uri.parse(
-        '${ApiConstants.url}everything?q=$generalKeyword&apiKey=75b6a8e9caea4d73bddab280b40d616e',
+        '${ApiConstants.url}everything?q=$generalKeyword&language=$strCountry&apiKey=${ApiConstants.apiKey}',
       ),
       headers: requestHeaders,
     );

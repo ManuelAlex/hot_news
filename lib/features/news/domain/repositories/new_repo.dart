@@ -1,20 +1,20 @@
 import 'package:flutter/foundation.dart' show immutable;
+import 'package:hot_news/app_cores/app_prefs.dart';
 import 'package:hot_news/app_cores/app_return_types/results.dart';
-import 'package:hot_news/features/news/data/models/params.dart';
 import 'package:hot_news/features/news/domain/entities/news_entity.dart';
 
 @immutable
 abstract class NewsRepository {
   const NewsRepository();
   Future<NewsResult> getNewsHeadLines({
-    required Params params,
+    required AppPreferences appPreferences,
   });
 
   Future<NewsResult> getAllNews({
-    required Params params,
+    required AppPreferences appPreferences,
   });
   Future<NewsResult> searchAllNews({
-    required Params params,
+    required AppPreferences appPreferences,
   });
 
   Future<NewsResult> localCachedNews();

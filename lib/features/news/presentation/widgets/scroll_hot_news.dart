@@ -21,7 +21,7 @@ class ScrollHotCards extends ConsumerWidget {
       child: Column(
         children: [
           SizedBox(
-            height: MediaQuery.of(context).size.height * 0.45,
+            height: MediaQuery.of(context).size.height * 0.44,
             child: PageView.builder(
               itemCount: cat.Category.values.length,
               controller: pageController,
@@ -31,9 +31,6 @@ class ScrollHotCards extends ConsumerWidget {
                 );
               },
             ),
-          ),
-          const SizedBox(
-            height: AppPadding.p4,
           ),
           SmoothPageIndicator(
             controller: pageController,

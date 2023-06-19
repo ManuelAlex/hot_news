@@ -14,64 +14,67 @@ class NewsCardSkeletonLoader extends StatelessWidget {
     // final size = MediaQuery.of(context).size;
 
     return SkeletonLoader(
-      builder: Row(
-        children: [
-          Expanded(
-            flex: 6,
-            child: Container(
-              height: 150,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(AppRadius.r16),
-                color: Colors.transparent,
-              ),
-              child: Column(
-                children: [
-                  Expanded(
-                    child: Container(
-                      color: Colors.white,
-                      height: 40,
-                      width: double.infinity,
+      builder: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          children: [
+            Expanded(
+              flex: 6,
+              child: Container(
+                height: 150,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(AppRadius.r16),
+                  color: Colors.transparent,
+                ),
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        color: Colors.white,
+                        height: 40,
+                        width: double.infinity,
+                      ),
                     ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Expanded(
-                    child: Container(
-                      color: Colors.white,
-                      height: 40,
-                      width: double.infinity,
+                    const SizedBox(
+                      height: 10,
                     ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Expanded(
-                    child: Container(
-                      color: Colors.white,
-                      height: 40,
-                      width: double.infinity,
+                    Expanded(
+                      child: Container(
+                        color: Colors.white,
+                        height: 40,
+                        width: double.infinity,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(
-            width: 10,
-          ),
-          Expanded(
-            flex: 4,
-            child: Container(
-              height: 150,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(AppRadius.r16),
-                color: Colors.white,
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Expanded(
+                      child: Container(
+                        color: Colors.white,
+                        height: 40,
+                        width: double.infinity,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+            const SizedBox(
+              width: 10,
+            ),
+            Expanded(
+              flex: 4,
+              child: Container(
+                height: 150,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(AppRadius.r16),
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
       items: itemCount,
       period: const Duration(seconds: 2),

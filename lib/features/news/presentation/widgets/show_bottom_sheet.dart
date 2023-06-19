@@ -27,11 +27,15 @@ class CustomShowBottomSheetWidget extends ConsumerWidget {
   final String textToDisplay;
   final VoidCallback onPressed;
   final Color color;
+  final VoidCallback? onPressd2;
+  final bool isDouble;
   const CustomShowBottomSheetWidget({
     super.key,
     required this.onPressed,
     required this.textToDisplay,
     required this.color,
+    this.onPressd2,
+    this.isDouble = true,
   });
 
   @override
@@ -51,24 +55,33 @@ class CustomShowBottomSheetWidget extends ConsumerWidget {
           child: Column(
             children: [
               _simpleContainer(
+                  onPressed2: onPressd2,
+                  text2: 'Share',
                   text: textToDisplay,
                   onPressed: onPressed,
+                  style2: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                      fontSize: AppSize.s16,
+                      color: ColorManager.primary,
+                      fontWeight: FontWeight.bold),
                   style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                         fontSize: AppSize.s16,
                         color: color,
-                      )),
+                      ),
+                  isDouble: isDouble),
               const SizedBox(
                 height: AppMagine.m16,
               ),
               _simpleContainer(
-                  text: 'Cancle',
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                      fontSize: AppSize.s16,
-                      color: ColorManager.primary,
-                      fontWeight: FontWeight.bold)),
+                isDouble: false,
+                text: 'Cancle',
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                    fontSize: AppSize.s16,
+                    color: ColorManager.primary,
+                    fontWeight: FontWeight.bold),
+              ),
               const SizedBox(
                 height: AppMagine.m32,
               ),
@@ -80,9 +93,13 @@ class CustomShowBottomSheetWidget extends ConsumerWidget {
   }
 
   Container _simpleContainer({
+    String? text2,
+    VoidCallback? onPressed2,
+    TextStyle? style2,
     required VoidCallback onPressed,
     required String text,
     required TextStyle style,
+    required bool isDouble,
   }) {
     return Container(
       width: double.infinity,
@@ -91,12 +108,26 @@ class CustomShowBottomSheetWidget extends ConsumerWidget {
         color: ColorManager.darkGrey.withOpacity(0.7),
         borderRadius: BorderRadius.circular(AppRadius.r10),
       ),
-      child: TextButton(
-        onPressed: onPressed,
-        child: Text(
-          text,
-          style: style,
-        ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          TextButton(
+            onPressed: onPressed,
+            child: Text(
+              text,
+              style: style,
+            ),
+          ),
+          if (isDouble) const SizedBox(width: AppSize.s50),
+          if (isDouble)
+            TextButton(
+              onPressed: onPressed2,
+              child: Text(
+                text2!,
+                style: style2,
+              ),
+            ),
+        ],
       ),
     );
   }

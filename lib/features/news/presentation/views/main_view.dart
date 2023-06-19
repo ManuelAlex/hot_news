@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive/hive.dart';
+import 'package:hot_news/app_cores/app_prefs.dart';
+import 'package:hot_news/app_cores/injection_container.dart';
+import 'package:hot_news/features/news/presentation/constants/string_const.dart';
 import 'package:hot_news/features/news/presentation/resources/color_manager.dart';
+import 'package:hot_news/features/news/presentation/state_mgt/provider/cat_chip_state_provider.dart';
 import 'package:hot_news/features/news/presentation/views/headline_news_view.dart';
+import 'package:hot_news/features/news/presentation/views/onboarding_chips_view.dart';
 import 'package:hot_news/features/news/presentation/views/saved_news_view.dart';
 import 'package:hot_news/features/news/presentation/views/search_view.dart';
-import 'package:hot_news/features/news/presentation/widgets/custom_chips.dart';
+import 'package:hot_news/features/news/presentation/views/settings_view.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
 class MainView extends ConsumerWidget {
@@ -46,9 +52,7 @@ class MainView extends ConsumerWidget {
       const HeadLineNewsView(),
       const SearchView(),
       const SavedNewsView(),
-      const NewsChipWrap(),
-
-      //  const Profile(),
+      const SettingsView(),
     ];
   }
 
@@ -56,55 +60,28 @@ class MainView extends ConsumerWidget {
     return [
       PersistentBottomNavBarItem(
         icon: const Icon(Icons.home),
-        title: ("Home"),
+        title: (NewsStringConst.home),
         activeColorPrimary: ColorManager.primary,
         inactiveColorPrimary: Colors.grey,
       ),
       PersistentBottomNavBarItem(
         icon: const Icon(Icons.newspaper),
-        title: ("News"),
+        title: (NewsStringConst.news),
         activeColorPrimary: ColorManager.primary,
         inactiveColorPrimary: Colors.grey,
       ),
       PersistentBottomNavBarItem(
         icon: const Icon(Icons.save),
-        title: ("Saved"),
+        title: (NewsStringConst.saved),
         activeColorPrimary: ColorManager.primary,
         inactiveColorPrimary: Colors.grey,
       ),
       PersistentBottomNavBarItem(
-        icon: const Icon(Icons.person),
-        title: ("Profile"),
+        icon: const Icon(Icons.settings),
+        title: (NewsStringConst.settings),
         activeColorPrimary: ColorManager.primary,
         inactiveColorPrimary: Colors.grey,
       ),
     ];
-  }
-}
-
-class WorldNews extends StatelessWidget {
-  const WorldNews({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const SavedNewsView();
-  }
-}
-
-class Profile extends StatelessWidget {
-  const Profile({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const SearchView();
-  }
-}
-
-class Saved extends StatelessWidget {
-  const Saved({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const HeadLineNewsView();
   }
 }

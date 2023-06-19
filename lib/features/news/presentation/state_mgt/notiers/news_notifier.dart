@@ -1,12 +1,16 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive/hive.dart';
+import 'package:hot_news/app_cores/app_prefs.dart';
 import 'package:hot_news/app_cores/app_return_types/new_app_state.dart';
 import 'package:hot_news/app_cores/app_return_types/results.dart';
+import 'package:hot_news/app_cores/injection_container.dart';
 import 'package:hot_news/features/news/data/models/params.dart';
 import 'package:hot_news/features/news/domain/use_cases/abs_news_usecase.dart';
 import 'package:hot_news/features/news/domain/use_cases/get_all_news_usecase.dart';
 import 'package:hot_news/features/news/domain/use_cases/get_news_headline_usecase.dart';
 import 'package:hot_news/features/news/domain/use_cases/search_all_news_usecase.dart';
 import 'package:hot_news/features/news/presentation/constants/string_const.dart';
+import 'package:hot_news/features/news/presentation/extension/int_to_category_extension.dart';
 
 class NewsNotifer extends StateNotifier<NewsState> {
   final GetAllNewsUseCase getAllNewsUseCase;
@@ -19,39 +23,64 @@ class NewsNotifer extends StateNotifier<NewsState> {
     required this.searchAllNewsUsecase,
     // required this.netWorkInfo,
   }) : super(
-          const NewsState.initial(),
+          NewsState.initial(),
         ) {
-    getAllNews();
+    getAllNews(
+      0,
+    );
   }
 
-  Future<void> getAllNews() => _getNews(
+  Future<void> getAllNews(int chipsIndex) => _getNews(
         newsUseCase: getAllNewsUseCase,
-        params: const Params(),
+        appPreferences: AppPreferences(
+          hiveInterface: sl<HiveInterface>(),
+          params: Params(
+            category: chipsIndex.intToCategory(),
+          ),
+        ),
+        index: chipsIndex,
       );
-  Future<void> getNewsHeadline() => _getNews(
+  Future<void> getNewsHeadline(int chipsIndex) => _getNews(
         newsUseCase: getNewsHeadlineUsecase,
-        params: const Params(),
+        appPreferences: AppPreferences(
+          hiveInterface: sl<HiveInterface>(),
+          params: Params(
+            category: chipsIndex.intToCategory(),
+          ),
+        ),
+        index: chipsIndex,
       );
-  Future<void> searchAllNews({
+  Future<void> searchAllNews(
+    int chipsIndex, {
     required String searchTerm,
   }) =>
       _getNews(
         newsUseCase: searchAllNewsUsecase,
-        params: Params(searchPhrase: searchTerm),
+        appPreferences: AppPreferences(
+          hiveInterface: sl<HiveInterface>(),
+          params: Params(
+            category: chipsIndex.intToCategory(),
+            searchPhrase: searchTerm,
+          ),
+        ),
+        index: chipsIndex,
       );
   Future<void> _getNews({
-    required Params params,
+    required AppPreferences appPreferences,
+    required int index,
     required NewsUseCase newsUseCase,
   }) async {
     state = state.copyWithIsLoading(true);
     // final isConnected = await netWorkInfo.isConnected;
     // if (isConnected) {
     try {
-      final result = await newsUseCase.request(params: params);
+      state.chipsIndex = index;
+      final result = await newsUseCase.request(appPreferences: appPreferences);
 
       if (result.result == Result.failure) {
-        state = const NewsState(
+        state = NewsState(
           news: null,
+          chipsIndex: state.chipsIndex,
           result: Result.failure,
           isLoading: false,
           errorMessage: ErrorStringConst.nullResult,
@@ -59,20 +88,22 @@ class NewsNotifer extends StateNotifier<NewsState> {
       } else if (result.result == Result.success) {
         state = NewsState(
           news: result.news,
+          chipsIndex: index,
           result: Result.success,
           isLoading: false,
           errorMessage: null,
         );
       } else if (result.result == Result.offline) {
-        state = const NewsState(
+        state = NewsState(
           news: null,
+          chipsIndex: index,
           result: Result.offline,
           isLoading: false,
           errorMessage: ErrorStringConst.networkError,
         );
       }
     } catch (_) {
-      state = const NewsState.initial();
+      state = NewsState.initial();
     }
     // }
     // else {

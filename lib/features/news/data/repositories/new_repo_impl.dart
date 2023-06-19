@@ -1,8 +1,8 @@
+import 'package:hot_news/app_cores/app_prefs.dart';
 import 'package:hot_news/app_cores/network/network_info.dart';
 import 'package:hot_news/features/news/data/data_sources/local_data_sources.dart';
 import 'package:hot_news/features/news/data/data_sources/news_remote_data_source.dart';
 import 'package:hot_news/features/news/data/models/news_model.dart';
-import 'package:hot_news/features/news/data/models/params.dart';
 import 'package:hot_news/app_cores/app_return_types/results.dart';
 import 'package:hot_news/features/news/domain/entities/news_entity.dart';
 import 'package:hot_news/features/news/domain/repositories/new_repo.dart';
@@ -17,18 +17,25 @@ class NewRepositaryImpl extends NewsRepository {
     required this.localDataSources,
   });
   @override
-  Future<NewsResult> getAllNews({required Params params}) => _getNew(
-        getNews: newsRemoteDataSource.getAllNews(params: params),
+  Future<NewsResult> getAllNews({required AppPreferences appPreferences}) =>
+      _getNew(
+        getNews:
+            newsRemoteDataSource.getAllNews(appPreferences: appPreferences),
       );
 
   @override
-  Future<NewsResult> getNewsHeadLines({required Params params}) => _getNew(
-        getNews: newsRemoteDataSource.getNewsHeadLines(params: params),
+  Future<NewsResult> getNewsHeadLines(
+          {required AppPreferences appPreferences}) =>
+      _getNew(
+        getNews: newsRemoteDataSource.getNewsHeadLines(
+            appPreferences: appPreferences),
       );
 
   @override
-  Future<NewsResult> searchAllNews({required Params params}) => _getNew(
-        getNews: newsRemoteDataSource.searchAllNews(params: params),
+  Future<NewsResult> searchAllNews({required AppPreferences appPreferences}) =>
+      _getNew(
+        getNews:
+            newsRemoteDataSource.searchAllNews(appPreferences: appPreferences),
       );
 
   Future<NewsResult> _getNew({

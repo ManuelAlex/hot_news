@@ -1,6 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:hot_news/app_cores/app_prefs.dart';
+import 'package:hot_news/app_cores/injection_container.dart';
+import 'package:hot_news/features/news/data/models/params.dart';
 import 'package:hot_news/features/news/presentation/constants/string_const.dart';
 import 'package:hot_news/features/news/presentation/resources/color_manager.dart';
 import 'package:hot_news/features/news/presentation/resources/routes_manager.dart';
@@ -15,14 +19,25 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   late final Timer? timer;
-  void delay() {
-    timer = Timer(const Duration(seconds: 2), () {
-      Navigator.pushReplacement(
-        context,
-        RouteGenerator.getRoute(
-          const RouteSettings(name: Routes.home),
-        ),
-      );
+  Future<void> delay() async {
+    timer = Timer(const Duration(seconds: 2), () async {
+      final setAppState = sl<AppPreferences>().getAppPrefBoolState();
+      final state = await setAppState;
+      if (state == null || false) {
+        await Navigator.pushReplacement(
+          context,
+          RouteGenerator.getRoute(
+            const RouteSettings(name: Routes.onBoardingChips),
+          ),
+        );
+      } else {
+        await Navigator.pushReplacement(
+          context,
+          RouteGenerator.getRoute(
+            const RouteSettings(name: Routes.home),
+          ),
+        );
+      }
     });
   }
 

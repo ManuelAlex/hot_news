@@ -1,3 +1,4 @@
+import 'package:hot_news/app_cores/app_prefs.dart';
 import 'package:hot_news/app_cores/app_return_types/results.dart';
 import 'package:hot_news/features/news/domain/repositories/new_repo.dart';
 import 'package:hot_news/features/news/domain/use_cases/abs_news_usecase.dart';
@@ -9,9 +10,10 @@ class GetAllNewsUseCase implements NewsUseCase<NewsResult, Params> {
     required this.repository,
   });
   @override
-  Future<NewsResult> request({required Params params}) async {
+  Future<NewsResult> request({required AppPreferences appPreferences}) async {
     try {
-      final result = await repository.getAllNews(params: params);
+      final result =
+          await repository.getAllNews(appPreferences: appPreferences);
 
       return NewsResult(result: Result.success, news: result.news);
     } catch (_) {

@@ -70,7 +70,7 @@ class AvatarCard extends ConsumerWidget {
                   padding: const EdgeInsets.all(AppPadding.p10),
                   child: Center(
                     child: Text(
-                      getCategory(category) ?? NewsStringConst.defaultCat,
+                      getCategory(category),
                       style: Theme.of(context).textTheme.headlineSmall,
                       textAlign: TextAlign.center,
                     ),

@@ -6,9 +6,12 @@ import 'package:hot_news/features/news/presentation/animation/loading_animation_
 import 'package:hot_news/features/news/presentation/constants/string_const.dart';
 import 'package:hot_news/features/news/presentation/resources/color_manager.dart';
 import 'package:hot_news/features/news/presentation/resources/value_manager.dart';
+import 'package:hot_news/features/news/presentation/state_mgt/provider/local_news_notifier_provider.dart';
 import 'package:hot_news/features/news/presentation/widgets/custom_button.dart';
 import 'package:hot_news/features/news/presentation/widgets/double_row_string.dart';
 import 'package:hot_news/features/news/presentation/extension/date_deducer_ext.dart';
+import 'package:hot_news/features/news/presentation/widgets/show_bottom_sheet.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class NewsDetailView extends ConsumerWidget {
@@ -23,7 +26,10 @@ class NewsDetailView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: _buildAppBar(context),
+      appBar: _buildAppBar(
+        context,
+        ref,
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(AppPadding.p10),
@@ -119,7 +125,7 @@ class NewsDetailView extends ConsumerWidget {
     );
   }
 
-  AppBar _buildAppBar(BuildContext context) {
+  AppBar _buildAppBar(BuildContext context, WidgetRef ref) {
     return AppBar(
       leading: CustomButton(
         color: ColorManager.lightGrey,
@@ -135,7 +141,22 @@ class NewsDetailView extends ConsumerWidget {
         CustomButton(
           color: ColorManager.lightGrey,
           onTap: () {
-            //TODO:
+            showBottomSheet(
+              context: context,
+              builder: (_) {
+                return CustomShowBottomSheetWidget(
+                  isDouble: false,
+                  color: ColorManager.primary,
+                  textToDisplay: NewsStringConst.save,
+                  onPressed: () {
+                    ref
+                        .read(localNewStateProvider.notifier)
+                        .saveNews(news: news);
+                    Navigator.pop(_);
+                  },
+                );
+              },
+            );
           },
           child: Padding(
             padding: const EdgeInsets.all(AppSize.s16),
@@ -151,7 +172,21 @@ class NewsDetailView extends ConsumerWidget {
         CustomButton(
           color: ColorManager.lightGrey,
           onTap: () {
-            //TODO:
+            showBottomSheet(
+              context: context,
+              builder: (context) {
+                return CustomShowBottomSheetWidget(
+                  isDouble: false,
+                  color: ColorManager.primary,
+                  textToDisplay: NewsStringConst.share,
+                  onPressed: () {
+                    Share.share('${news.url}',
+                        subject: NewsStringConst.checkNews);
+                    Navigator.of(context).pop();
+                  },
+                );
+              },
+            );
           },
           child: Padding(
             padding: const EdgeInsets.all(AppSize.s16),

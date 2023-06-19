@@ -7,12 +7,14 @@ import 'package:hot_news/features/news/presentation/constants/string_const.dart'
 import 'package:hot_news/features/news/presentation/resources/color_manager.dart';
 import 'package:hot_news/features/news/presentation/resources/value_manager.dart';
 import 'package:hot_news/features/news/presentation/state_mgt/provider/get_news_provider.dart';
+import 'package:hot_news/features/news/presentation/state_mgt/provider/intdex_state_local_provider.dart';
 import 'package:hot_news/features/news/presentation/state_mgt/provider/local_news_notifier_provider.dart';
 import 'package:hot_news/features/news/presentation/views/news_details_view.dart';
 import 'package:hot_news/features/news/presentation/widgets/double_row_string.dart';
 import 'package:hot_news/features/news/presentation/extension/date_deducer_ext.dart';
 import 'package:hot_news/features/news/presentation/widgets/news_skeleton_loader.dart';
 import 'package:hot_news/features/news/presentation/widgets/show_bottom_sheet.dart';
+import 'package:share_plus/share_plus.dart';
 
 class NewsCardList extends ConsumerWidget {
   const NewsCardList({
@@ -22,7 +24,7 @@ class NewsCardList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final newsState = ref.watch(getNewsProvider);
-
+    final chipIndex = ref.watch(indexStateLocalProvider);
     return newsState.when(
       data: (data) {
         final newsList = data.news;
@@ -40,35 +42,48 @@ class NewsCardList extends ConsumerWidget {
             (context, index) {
               final news = newsList.elementAt(index);
               return GestureDetector(
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => NewsDetailView(
-                      news: news,
-                    ),
-                  ),
-                ),
-                child: NewsCard(
-                  news: news,
-                  onPressed: () {
-                    showBottomSheet(
-                      context: context,
-                      builder: (_) {
-                        return CustomShowBottomSheetWidget(
-                          color: ColorManager.primary,
-                          textToDisplay: 'Save',
-                          onPressed: () {
-                            ref
-                                .read(localNewStateProvider.notifier)
-                                .saveNews(news: newsList.elementAt(index));
-                            Navigator.pop(_);
+                  onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (BuildContext context) {
+                            return Builder(
+                              builder: (BuildContext builderContext) {
+                                return NewsDetailView(
+                                  news: news,
+                                );
+                              },
+                            );
                           },
-                        );
-                      },
-                    );
-                  },
-                ),
-              );
+                        ),
+                      ),
+                  child: NewsCard(
+                    news: newsList.elementAt(index),
+                    onPressed: () {
+                      showBottomSheet(
+                        context: context,
+                        builder: (_) {
+                          return CustomShowBottomSheetWidget(
+                            onPressd2: () {
+                              Share.share('${newsList.elementAt(index).url}',
+                                  subject: NewsStringConst.checkNews);
+                              Navigator.of(context).pop();
+                            },
+                            color: ColorManager.primary,
+                            textToDisplay: NewsStringConst.save,
+                            onPressed: () {
+                              ref
+                                  .read(localNewStateProvider.notifier)
+                                  .saveNews(news: newsList.elementAt(index));
+                              Navigator.pop(_);
+                              ref
+                                  .read(localNewStateProvider.notifier)
+                                  .getSavedNews(chipIndex);
+                            },
+                          );
+                        },
+                      );
+                    },
+                  ));
             },
             childCount: newsList.length,
           ),
@@ -129,7 +144,10 @@ class NewsCard extends StatelessWidget {
                     Expanded(
                       child: Text(
                         news.title ?? NewsStringConst.title,
-                        style: Theme.of(context).textTheme.bodyLarge,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyLarge!
+                            .copyWith(fontSize: 18),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -138,7 +156,9 @@ class NewsCard extends StatelessWidget {
                       children: [
                         IntrinsicHeight(
                           child: Text(
-                            news.source?[0] ?? NewsStringConst.source,
+                            news.source?[1].toString() == 'null'
+                                ? NewsStringConst.source
+                                : news.source?[1],
                             style: Theme.of(context).textTheme.bodySmall,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,

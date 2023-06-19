@@ -57,9 +57,7 @@ class LocalDataSourcesImpl implements LocalDataSources {
       final newsCollection = hiveInterface.box(
         boxName,
       );
-      if (newsCollection.containsKey(news.newsId!)) {
-        print('already added ${news.newsId}');
-      } else {
+      if (!newsCollection.containsKey(news.newsId!)) {
         await newsCollection.put(news.newsId, payload);
       }
 
@@ -75,11 +73,8 @@ class LocalDataSourcesImpl implements LocalDataSources {
     final newsCollection = hiveInterface.box(boxName);
 
     try {
-      print(newsCollection.toMap().keys);
       if (newsCollection.containsKey(keyString)) {
         newsCollection.delete(keyString);
-      } else {
-        print("Item Not found");
       }
 
       return true;

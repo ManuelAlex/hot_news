@@ -2,14 +2,14 @@ import 'package:flutter/foundation.dart' show immutable;
 
 @immutable
 class Params {
-  final String? country;
+  final Country country;
   final Category category;
   final String? sources;
   final String? searchPhrase;
   final int? pageSize;
 
   const Params({
-    this.country = 'us',
+    this.country = Country.en,
     this.category = Category.general,
     this.pageSize = 20,
     this.sources,
@@ -22,11 +22,9 @@ enum NewSources {
 }
 
 enum Country {
-  us,
+  en,
   fr,
   ru,
-  mx,
-  ng,
 }
 
 enum Category {

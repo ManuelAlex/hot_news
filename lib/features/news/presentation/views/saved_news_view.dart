@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hot_news/features/news/domain/entities/news_entity.dart';
 import 'package:hot_news/features/news/presentation/animation/loading_animation_view.dart';
+import 'package:hot_news/features/news/presentation/constants/string_const.dart';
 import 'package:hot_news/features/news/presentation/resources/color_manager.dart';
 import 'package:hot_news/features/news/presentation/resources/value_manager.dart';
+import 'package:hot_news/features/news/presentation/state_mgt/provider/intdex_state_local_provider.dart';
 import 'package:hot_news/features/news/presentation/state_mgt/provider/local_news_notifier_provider.dart';
 import 'package:hot_news/features/news/presentation/state_mgt/provider/saved_news_search_provider.dart';
 import 'package:hot_news/features/news/presentation/views/news_details_view.dart';
@@ -11,6 +13,7 @@ import 'package:hot_news/features/news/presentation/widgets/custom_chips.dart';
 import 'package:hot_news/features/news/presentation/widgets/news_card.dart';
 import 'package:hot_news/features/news/presentation/widgets/news_skeleton_loader.dart';
 import 'package:hot_news/features/news/presentation/widgets/show_bottom_sheet.dart';
+import 'package:share_plus/share_plus.dart';
 
 class SavedNewsView extends ConsumerStatefulWidget {
   const SavedNewsView({super.key});
@@ -35,7 +38,9 @@ class _SavedNewsViewState extends ConsumerState<SavedNewsView> {
 
   @override
   Widget build(BuildContext context) {
+    final chipsIndex = ref.watch(indexStateLocalProvider);
     final newsState = ref.watch(localNewStateProvider);
+
     final newsList = newsState.news;
 
     if (newsState.isLoading) {
@@ -48,6 +53,7 @@ class _SavedNewsViewState extends ConsumerState<SavedNewsView> {
         child: NotFoundAnimationView(),
       );
     }
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -109,14 +115,17 @@ class _SavedNewsViewState extends ConsumerState<SavedNewsView> {
                   height: AppSize.s10,
                 ),
                 RefreshIndicator(
+                  color: ColorManager.primary,
                   onRefresh: () async {
                     return await ref
                         .read(localNewStateProvider.notifier)
-                        .getSavedNews();
+                        .getSavedNews(
+                          chipsIndex,
+                        );
                   },
                   child: _allNewsOrSearchedNews(
                     context,
-                    newsList,
+                    newsList.toList().reversed.toList(),
                   ),
                 ),
               ],
@@ -131,6 +140,7 @@ class _SavedNewsViewState extends ConsumerState<SavedNewsView> {
     BuildContext context,
     Iterable<News> newsList,
   ) {
+    final chipsIndex = ref.watch(indexStateLocalProvider);
     final searchNews = ref.watch(savedNewsSearchProvider(textController.text));
     if (textController.text.isEmpty) {
       return SizedBox(
@@ -152,13 +162,18 @@ class _SavedNewsViewState extends ConsumerState<SavedNewsView> {
                     context: context,
                     builder: (_) {
                       return CustomShowBottomSheetWidget(
+                        onPressd2: () {
+                          Share.share('${newsList.elementAt(index).url}',
+                              subject: NewsStringConst.checkNews);
+                          Navigator.of(context).pop();
+                        },
                         color: Colors.red,
-                        textToDisplay: 'Delete',
+                        textToDisplay: NewsStringConst.delete,
                         onPressed: () {
                           if (newsList.elementAt(index).newsId == null) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
-                                content: Text('Unable to delete at the moment'),
+                                content: Text(NewsStringConst.deleteMessage),
                               ),
                             );
                             return;
@@ -166,9 +181,6 @@ class _SavedNewsViewState extends ConsumerState<SavedNewsView> {
                           ref.read(localNewStateProvider.notifier).deleteNews(
                               keyString: newsList.elementAt(index).newsId!);
                           Navigator.pop(_);
-                          ref
-                              .read(localNewStateProvider.notifier)
-                              .getSavedNews();
                         },
                       );
                     },
@@ -214,7 +226,7 @@ class _SavedNewsViewState extends ConsumerState<SavedNewsView> {
                           Navigator.pop(_);
                           ref
                               .read(localNewStateProvider.notifier)
-                              .getSavedNews();
+                              .getSavedNews(chipsIndex);
                         },
                       );
                     },

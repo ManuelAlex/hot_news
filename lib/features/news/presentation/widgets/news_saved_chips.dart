@@ -6,10 +6,10 @@ import 'package:hot_news/features/news/presentation/resources/color_manager.dart
 import 'package:hot_news/features/news/presentation/resources/value_manager.dart';
 import 'package:hot_news/features/news/data/models/params.dart' as cat
     show Category;
-import 'package:hot_news/features/news/presentation/state_mgt/provider/news_state_provider.dart';
+import 'package:hot_news/features/news/presentation/state_mgt/provider/local_news_notifier_provider.dart';
 
-class NewsChipWrap extends ConsumerWidget {
-  const NewsChipWrap({
+class NewsSavedChipWrap extends ConsumerWidget {
+  const NewsSavedChipWrap({
     super.key,
   });
 
@@ -18,18 +18,18 @@ class NewsChipWrap extends ConsumerWidget {
     BuildContext context,
     WidgetRef ref,
   ) {
-    final chipIndexProvider = ref.watch(newStateProvider).chipsIndex;
+    final chipIndexProvider = ref.watch(localNewStateProvider).chipsIndex;
     final selectedIndex = chipIndexProvider;
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
         children: cat.Category.values
-            .map((eachCat) => NewsChip(
+            .map((eachCat) => NewsSavedChip(
                   textString: eachCat.getCategory(eachCat),
                   onTap: () {
                     // if (eachCat.catToInt() == selectedIndex) {}
-                    ref.read(newStateProvider.notifier).getAllNews(
+                    ref.read(localNewStateProvider.notifier).getSavedNews(
                           eachCat.catToInt(),
                         );
                   },
@@ -46,13 +46,13 @@ class NewsChipWrap extends ConsumerWidget {
   }
 }
 
-class NewsChip extends StatelessWidget {
+class NewsSavedChip extends StatelessWidget {
   final String textString;
   final VoidCallback onTap;
   final Color color;
   final Color textColor;
 
-  const NewsChip({
+  const NewsSavedChip({
     super.key,
     required this.textString,
     required this.onTap,
