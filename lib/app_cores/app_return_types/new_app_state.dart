@@ -18,7 +18,7 @@ class NewsState {
     required this.chipsIndex,
   });
   NewsState.initial()
-      : news = [],
+      : news = null,
         result = Result.failure,
         isLoading = false,
         chipsIndex = 0,

@@ -48,11 +48,6 @@ class _SavedNewsViewState extends ConsumerState<SavedNewsView> {
         itemCount: 3,
       );
     }
-    if (newsList == null) {
-      return const Center(
-        child: NotFoundAnimationView(),
-      );
-    }
 
     return Scaffold(
       body: SafeArea(
@@ -123,10 +118,14 @@ class _SavedNewsViewState extends ConsumerState<SavedNewsView> {
                           chipsIndex,
                         );
                   },
-                  child: _allNewsOrSearchedNews(
-                    context,
-                    newsList.toList().reversed.toList(),
-                  ),
+                  child: newsState.news!.isEmpty
+                      ? const Center(
+                          child: NotFoundAnimationView(),
+                        )
+                      : _allNewsOrSearchedNews(
+                          context,
+                          newsList!.toList().reversed.toList(),
+                        ),
                 ),
               ],
             ),
