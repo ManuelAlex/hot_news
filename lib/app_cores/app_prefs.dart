@@ -27,9 +27,10 @@ class AppPreferences {
     final newsCollection = hiveInterface.box(boxName);
     final cat = await newsCollection.get(AppPrefsConst.getCatKey);
     if (cat == null) {
-      Strings.general;
+      return Strings.general;
+    } else {
+      return cat.toString();
     }
-    return cat;
   }
 
   Future<String> getAppCountry() async {
