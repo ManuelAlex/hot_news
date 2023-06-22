@@ -46,11 +46,3 @@ class ScrollHotCards extends ConsumerWidget {
     );
   }
 }
-//  const SizedBox(
-//             height: AppSize.s10,
-//           ),
-//           SmoothPageIndicator(
-//             controller: pageController,
-//             count: cat.Category.values.length,
-//             effect: const ExpandingDotsEffect(),
-//           ),

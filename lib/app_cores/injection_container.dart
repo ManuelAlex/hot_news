@@ -37,14 +37,14 @@ void init() async {
       repository: sl(),
     ),
   );
-  sl.registerLazySingleton(
+  sl.registerFactory(
     () => AppPreferences(
       hiveInterface: sl(),
       params: sl(),
     ),
   );
   sl.registerLazySingleton(
-    () => const Params(),
+    () => const Params(category: Category.general),
   );
   sl.registerLazySingleton(
     () => GetNewsHeadlineUsecase(

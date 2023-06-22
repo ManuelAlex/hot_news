@@ -1,22 +1,10 @@
-// https://newsapi.org/v2/everything?q=Apple&from=2023-05-23&sortBy=popularity&apiKey=API_KEY
-//https://newsapi.org/v2/everything?pageSize=2&domains=techcrunch.com,thenextweb.com&apiKey=75b6a8e9caea4d73bddab280b40d616e
-// var url = 'https://newsapi.org/v2/everything?' +
-//           'q=Apple&' +
-//           'from=2023-05-23&' +
-//           'sortBy=popularity&' +
-//           'apiKey=75b6a8e9caea4d73bddab280b40d616e';
-//           https://newsapi.org/v2/everything?/q=Apple&from=2023-05-23&sortBy=popularity&apiKey=75b6a8e9caea4d73bddab280b40d616e
-//           https://newsapi.org/v2/everything?q=bitcoin&apiKey=75b6a8e9caea4d73bddab280b40d616e
-
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart' show immutable;
-import 'package:hive/hive.dart';
 import 'package:hot_news/app_cores/app_prefs.dart';
-import 'package:hot_news/app_cores/injection_container.dart';
+import 'package:hot_news/app_cores/extensions/strings_from_category.dart';
 import 'package:hot_news/features/news/data/api_constants.dart';
 import 'package:hot_news/features/news/data/models/news_model.dart';
-import 'package:hot_news/features/news/data/models/params.dart';
 import 'package:http/http.dart' as http;
 
 @immutable
@@ -42,9 +30,7 @@ class NewsRemoteDataSourceImpl implements NewsRemoteDataSource {
   Future<Iterable<NewsModel>> getAllNews({
     required AppPreferences appPreferences,
   }) =>
-      _getNews(
-          appPreferences: AppPreferences(
-              hiveInterface: sl<HiveInterface>(), params: const Params()));
+      _getNews(appPreferences: appPreferences);
 
   @override
   Future<Iterable<NewsModel>> getNewsHeadLines({
@@ -61,7 +47,7 @@ class NewsRemoteDataSourceImpl implements NewsRemoteDataSource {
   Future<Iterable<NewsModel>> _getNews({
     required AppPreferences appPreferences,
   }) async {
-    final generalKeyword = await appPreferences.getAppCategory();
+    final generalKeyword = appPreferences.params.category.getStringCategory();
 
     final strCountry = await appPreferences.getAppCountry();
 

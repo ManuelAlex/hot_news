@@ -10,7 +10,7 @@ class Params {
 
   const Params({
     this.country = Country.en,
-    this.category = Category.general,
+    required this.category,
     this.pageSize = 20,
     this.sources,
     this.searchPhrase,

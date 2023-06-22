@@ -40,16 +40,7 @@ class NewsNotifer extends StateNotifier<NewsState> {
         ),
         index: chipsIndex,
       );
-  Future<void> getNewsHeadline(int chipsIndex) => _getNews(
-        newsUseCase: getNewsHeadlineUsecase,
-        appPreferences: AppPreferences(
-          hiveInterface: sl<HiveInterface>(),
-          params: Params(
-            category: chipsIndex.intToCategory(),
-          ),
-        ),
-        index: chipsIndex,
-      );
+
   Future<void> searchAllNews(
     int chipsIndex, {
     required String searchTerm,

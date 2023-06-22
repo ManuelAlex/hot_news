@@ -11,6 +11,7 @@ import 'package:hot_news/features/news/presentation/resources/color_manager.dart
 import 'package:hot_news/features/news/presentation/resources/value_manager.dart';
 import 'package:hot_news/features/news/presentation/state_mgt/provider/get_cat_news_details_provider.dart';
 import 'package:hot_news/features/news/presentation/extension/date_deducer_ext.dart';
+import 'package:hot_news/features/news/presentation/state_mgt/provider/intdex_state_local_provider.dart';
 import 'package:hot_news/features/news/presentation/state_mgt/provider/local_news_notifier_provider.dart';
 import 'package:hot_news/features/news/presentation/views/hot_card_skeleton_loader.dart';
 import 'package:hot_news/features/news/presentation/views/news_details_view.dart';
@@ -52,7 +53,7 @@ class HotCards extends ConsumerWidget {
               context,
               MaterialPageRoute(
                 builder: (context) => NewsDetailView(
-                  news: news.first,
+                  news: news.elementAt(0),
                 ),
               ),
             );
@@ -136,7 +137,13 @@ class HotCards extends ConsumerWidget {
                                   onPressed: () {
                                     ref
                                         .read(localNewStateProvider.notifier)
-                                        .saveNews(news: news.elementAt(0));
+                                        .saveNews(
+                                          news: news.elementAt(0),
+                                        );
+                                    ref
+                                        .refresh(localNewStateProvider.notifier)
+                                        .getSavedNews(
+                                            ref.watch(indexStateLocalProvider));
                                     Navigator.pop(_);
                                   },
                                 );

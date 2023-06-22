@@ -1,12 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hive/hive.dart';
 import 'package:hot_news/app_cores/app_prefs.dart';
 import 'package:hot_news/app_cores/extensions/strings_from_country.dart';
 import 'package:hot_news/app_cores/injection_container.dart';
 import 'package:hot_news/features/news/data/models/params.dart' as cat
     show Category;
 import 'package:hot_news/features/news/data/models/onboarding_state.dart';
-import 'package:hot_news/features/news/data/models/params.dart';
 import 'package:hot_news/features/news/presentation/extension/int_to_category_extension.dart';
 
 class OnBoardingChipNotifier extends StateNotifier<OnBoardingState> {
@@ -18,10 +16,8 @@ class OnBoardingChipNotifier extends StateNotifier<OnBoardingState> {
             isLoading: false,
           ),
         );
-  final appPrefs = AppPreferences(
-    hiveInterface: sl<HiveInterface>(),
-    params: const Params(),
-  );
+  final appPrefs = sl<AppPreferences>();
+
   void setIsTapped(int index) async {
     final currentState = state.catBoolList.toList();
     currentState[index] = !currentState[index];

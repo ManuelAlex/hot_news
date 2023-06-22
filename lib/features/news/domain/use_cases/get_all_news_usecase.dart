@@ -2,9 +2,8 @@ import 'package:hot_news/app_cores/app_prefs.dart';
 import 'package:hot_news/app_cores/app_return_types/results.dart';
 import 'package:hot_news/features/news/domain/repositories/new_repo.dart';
 import 'package:hot_news/features/news/domain/use_cases/abs_news_usecase.dart';
-import 'package:hot_news/features/news/data/models/params.dart';
 
-class GetAllNewsUseCase implements NewsUseCase<NewsResult, Params> {
+class GetAllNewsUseCase implements NewsUseCase<NewsResult, AppPreferences> {
   final NewsRepository repository;
   GetAllNewsUseCase({
     required this.repository,
