@@ -16,9 +16,13 @@ Hot News is a Flutter-based news project that integrates the News API from newsa
 
 ## Screenshots
 
-![Screenshot 1][(https://github.com/ManuelAlex/](https://github.com/ManuelAlex/hot_news/blob/main/255BD929-B0A0-40DE-9130-D42C3C01B7FE.jpeg)
+![Screenshot 1](https://github.com/ManuelAlex/hot_news/raw/main/10F64EB3-CF8B-4B25-9164-41995DE0F10C.jpeg)
 ![Screenshot 2](https://github.com/ManuelAlex/hot_news/raw/main/ABC12345-6789-0123-4567-890ABCDEF012.jpeg)
 ![Screenshot 3](https://github.com/ManuelAlex/hot_news/raw/main/98765432-10EF-CDAB-8765-FEDCBA098765.jpeg)
+![Screenshot 4](https://github.com/ManuelAlex/hot_news/raw/main/DFB2134E-D785-4E7F-9026-D9DBFE52FD5E.jpeg)
+![Screenshot 5](https://github.com/ManuelAlex/hot_news/raw/main/CDCDEB82-C573-4FA6-927B-DC63B40A1A64.jpeg)
+![Screenshot 6](https://github.com/ManuelAlex/hot_news/raw/main/665DD9DF-B296-4438-8B23-0BCFCD7F17DD.jpeg)
+![Screenshot 7](https://github.com/ManuelAlex/hot_news/raw/main/255BD929-B0A0-40DE-9130-D42C3C01B7FE.jpeg)
 
 ## Getting Started
 
@@ -40,3 +44,4 @@ If you have any questions or want to connect regarding Hot News, you can reach m
 Enjoy staying informed with Hot News!
 
 **Note:** The above information assumes that the provided screenshots correspond to the Hot News project.
+
